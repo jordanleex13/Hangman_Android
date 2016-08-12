@@ -1,0 +1,183 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    tools:context="com.jordanleex13.hangman.FragmentOnePlayerLogin">
+
+    <LinearLayout
+        android:id="@+id/fragment_one_player_login_player_info"
+        android:layout_margin="@dimen/medium_margin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Player Name"
+            android:textSize="@dimen/medium_text"
+            android:fontFamily="sans-serif-light"
+            />
+        <EditText
+            android:id="@+id/fragment_one_player_login_player_name"
+            android:text="Jordan"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:inputType="textPersonName"
+            android:fontFamily="sans-serif-light"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/fragment_one_player_login_cpu_info"
+        android:layout_below="@id/fragment_one_player_login_player_info"
+        android:layout_margin="@dimen/medium_margin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="CPU Difficulty"
+            android:textSize="@dimen/medium_text"
+            android:fontFamily="sans-serif-light"
+            />
+
+        <RadioGroup
+            android:id="@+id/fragment_one_player_login_cpu_difficulty"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <RadioButton
+                android:id="@+id/fragment_one_player_login_rbEasy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Easy"
+                android:fontFamily="sans-serif-light"/>
+            <RadioButton
+                android:id="@+id/fragment_one_player_login_rbMedium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Medium"
+                android:fontFamily="sans-serif-light"
+                android:checked="true"/>
+            <RadioButton
+                android:id="@+id/fragment_one_player_login_rbHard"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Hard"
+                android:fontFamily="sans-serif-light"/>
+        </RadioGroup>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/fragment_one_player_login_word_info"
+        android:layout_below="@id/fragment_one_player_login_cpu_info"
+        android:layout_margin="@dimen/medium_margin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/fragment_one_player_login_word_categories"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Categories"
+            android:textSize="@dimen/medium_text"
+            android:fontFamily="sans-serif-light"
+            android:layout_margin="@dimen/medium_margin"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <CheckBox
+                android:id="@+id/fragment_one_player_login_category_animals"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Animals"
+                android:fontFamily="sans-serif-light"
+                />
+            <CheckBox
+                android:id="@+id/fragment_one_player_login_category_science"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Science"
+                android:fontFamily="sans-serif-light"
+                />
+            <CheckBox
+                android:id="@+id/fragment_one_player_login_category_sports"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Sports"
+                android:fontFamily="sans-serif-light"
+                />
+        </LinearLayout>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/small_margin" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <CheckBox
+                android:id="@+id/fragment_one_player_login_category_people"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="People"
+                android:fontFamily="sans-serif-light"
+                />
+            <CheckBox
+                android:id="@+id/fragment_one_player_login_category_landmarks"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Landmarks"
+                android:fontFamily="sans-serif-light"
+                />
+            <CheckBox
+                android:id="@+id/fragment_one_player_login_category_pokemon"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Pokemon"
+                android:fontFamily="sans-serif-light"
+                />
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/fragment_one_player_login_button_start"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorPrimary"
+        android:textColor="@color/white"
+        android:text="Start Playing!"
+        android:textSize="@dimen/medium_text"
+        android:fontFamily="sans-serif-light"
+        style="@android:style/ButtonBar"/>
+
+</RelativeLayout>

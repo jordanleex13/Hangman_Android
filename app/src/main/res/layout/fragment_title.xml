@@ -1,0 +1,51 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    tools:context="com.jordanleex13.hangman.FragmentTitle">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:orientation="vertical">
+
+
+        <TextView
+            android:id="@+id/fragment_title_textview_game_modes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="32dp"
+            android:text="Game Modes"
+            android:textSize="32sp"
+            android:fontFamily="sans-serif-light"/>
+
+        <Button
+            android:id="@+id/fragment_title_button_one_player"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:textColor="@color/white"
+            android:text="One Player"
+            android:fontFamily="sans-serif-light"/>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="8dp"  />
+
+        <Button
+            android:id="@+id/fragment_title_button_two_players"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:textColor="@color/white"
+            android:text="Two Players"
+            android:fontFamily="sans-serif-light"/>
+
+
+    </LinearLayout>
+
+
+</RelativeLayout>
