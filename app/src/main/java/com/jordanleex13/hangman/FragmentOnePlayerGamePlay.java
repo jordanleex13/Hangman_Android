@@ -51,8 +51,13 @@ public class FragmentOnePlayerGamePlay extends Fragment implements View.OnClickL
 
     private List<TextView> mListOfLetters = new ArrayList<>();  // INCLUDES SPACES
 
-    private LinearLayout mLinearLayout;
-    private GridLayout mGridLayout;
+    private LinearLayout mLinearRow1;
+    private LinearLayout mLinearRow2;
+    private static final String UNDERSCORE = "__";
+    private static final String SPACE = " ";
+
+    private int whichLayoutToPick = 1;
+    private GridLayout mAlphabetGrid;
     private ImageView mHangman;
     private Button mConcedeButton;
 
@@ -83,6 +88,7 @@ public class FragmentOnePlayerGamePlay extends Fragment implements View.OnClickL
 
         View v = inflater.inflate(R.layout.fragment_one_player_game_play, container, false);
 
+        // Set initial image
         mHangman = (ImageView) v.findViewById(R.id.fragment_one_player_game_play_hangman_image);
         mHangman.setImageBitmap(BitmapHelper.getBitmapFromMemCache("0"));
 
@@ -90,9 +96,10 @@ public class FragmentOnePlayerGamePlay extends Fragment implements View.OnClickL
 
 
         // TODO implement grid layout where each row is a new word maybe?
-        mLinearLayout = (LinearLayout) v.findViewById(R.id.fragment_one_player_game_play_linear_layout);
+        mLinearRow1 = (LinearLayout) v.findViewById(R.id.fragment_one_player_game_play_linear_layout);
+        mLinearRow2 = (LinearLayout) v.findViewById(R.id.fragment_one_player_game_play_linear_layout_2);
 
-        //Create four
+        //Create a TextView for each letter
         for(int j = 0; j < mWordLength; j++) {
 
             // Create TextView
@@ -102,31 +109,40 @@ public class FragmentOnePlayerGamePlay extends Fragment implements View.OnClickL
             underscore.setId(j);
             underscore.setPadding(8,0,8,0);
 
+            // Add to list of TextViews to be accessed later
             mListOfLetters.add(underscore);
 
             Log.d(TAG, String.valueOf(mCharArray[j]));
 
-            if (mCharArray[j] == ' ') {
-                Log.e(TAG, "SPACE");
-                underscore.setText("  ");
-                ++numOfNonLetters;
+            char currentChar = mCharArray[j];
+            if (currentChar >= 'A' && currentChar <= 'Z') {
+                underscore.setText(UNDERSCORE);
 
-            } else if (mCharArray[j] == '-') {
-                Log.e(TAG, "HYPHEN");
-                underscore.setText("-");
+            } else if (mCharArray[j] == ' ') {
+                Log.e(TAG, "SPACE");
+                underscore.setText(SPACE);
                 ++numOfNonLetters;
+                whichLayoutToPick = 2;
+
             } else {
-                underscore.setText("__");
+                underscore.setText(Character.toString(currentChar));
+                ++numOfNonLetters;
             }
 
-            mLinearLayout.addView(underscore);
+            // Determine which row to set the letter in
+            if (whichLayoutToPick == 1) {
+                mLinearRow1.addView(underscore);
+
+            } else if (whichLayoutToPick == 2) {
+                mLinearRow2.addView(underscore);
+            }
         }
 
-
-
-        mGridLayout = (GridLayout) v.findViewById(R.id.fragment_one_player_game_play_alphabet);
+        // Set up alphabet and listeners
+        mAlphabetGrid = (GridLayout) v.findViewById(R.id.fragment_one_player_game_play_alphabet);
         setGridListeners();
 
+        // Set up "Give Up" button
         mConcedeButton = (Button) v.findViewById(R.id.fragment_one_player_game_play_give_up);
         mConcedeButton.setOnClickListener(this);
 
@@ -156,15 +172,21 @@ public class FragmentOnePlayerGamePlay extends Fragment implements View.OnClickL
         }
     }
 
+
+
     /*
      * Utility functions
      */
+
     private void returnToPrevious() {
         getActivity().getSupportFragmentManager().popBackStackImmediate();
     }
 
 
-
+    /**
+     * Method to choose a random word from the specified category and difficulty level
+     * Creates a character array of that string
+     */
     private void setUpWord() {
         int resId = FileHelper.getStringIdentifier(getActivity(), mCategory + "_" + mDifficulty, "raw");
         mWord = FileHelper.selectRandomWord(getActivity(), resId);
@@ -180,21 +202,26 @@ public class FragmentOnePlayerGamePlay extends Fragment implements View.OnClickL
     }
 
     @SuppressWarnings({"All"})
+    /**
+     * Sets up OnClickListeners for each individual letter in the alphabet grid
+     */
     private void setGridListeners() {
 
-        final int size = mGridLayout.getChildCount();
+        final int size = mAlphabetGrid.getChildCount();
         Log.e(TAG, "size of grid layout : " + String.valueOf(size));
 
         for (int i = 0; i < size; ++i ) {
-            TextView temp = (TextView) mGridLayout.getChildAt(i);
+            TextView temp = (TextView) mAlphabetGrid.getChildAt(i);
             temp.setId(GRID_LAYOUT_ID);
             temp.setOnClickListener(this);
             Log.e(TAG, temp.getText().toString());
         }
     }
 
-
-
+    /**
+     * Method that checks to see if the guessed letter is in the word, then updates the UI accordingly
+     * @param v     The TextView in the alphabet grid that was clicked
+     */
     private void checkGuess(View v) {
         TextView view = (TextView) v;
         Log.d(TAG, view.getText().toString());
@@ -207,7 +234,7 @@ public class FragmentOnePlayerGamePlay extends Fragment implements View.OnClickL
             char c = view.getText().toString().toCharArray()[0];
 
             if (c == mCharArray[i]) {
-                // Interesting, by default it's already set as 0
+                // by default it's already set as 0
                 binary[i] = 1;
                 found = true;
             }
@@ -258,14 +285,14 @@ public class FragmentOnePlayerGamePlay extends Fragment implements View.OnClickL
     }
 
     /**
-     * Fills in the rest of the letters red
+     * Fills in the rest of the letters red; used when the player loses
      */
     private void fillInRestOfLetters() {
         for (int i = 0; i < mListOfLetters.size(); ++i) {
             TextView temp = mListOfLetters.get(i);
 
             String letter = temp.getText().toString();
-            if (letter.equals("_") || letter.equals(" ")) {
+            if (letter.equals(UNDERSCORE) || letter.equals(SPACE)) {
 
                 temp.setText(String.valueOf(mCharArray[i]));
                 temp.setTextColor(getResources().getColor(R.color.red));

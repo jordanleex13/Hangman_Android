@@ -17,6 +17,8 @@ import android.widget.Toast;
 
 import com.jordanleex13.hangman.Helpers.FragmentHelper;
 
+import junit.framework.Assert;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -94,11 +96,6 @@ public class FragmentOnePlayerLogin extends Fragment implements View.OnClickList
         landmarks.setOnCheckedChangeListener(this);
         pokemon.setOnCheckedChangeListener(this);
 
-
-        sports.setEnabled(false);
-        //people.setEnabled(false);
-        landmarks.setEnabled(false);
-
         startButton.setOnClickListener(this);
 
         return v;
@@ -132,6 +129,8 @@ public class FragmentOnePlayerLogin extends Fragment implements View.OnClickList
             case R.id.fragment_one_player_login_button_start:
 
                 if(validationCheck()) {
+
+                    Assert.assertTrue(selectedCategory != null && selectedDifficulty != null);
 
                     Fragment newFragment = FragmentOnePlayerGamePlay.newInstance(selectedCategory, selectedDifficulty);
                     FragmentHelper.swapFragments(getActivity().getSupportFragmentManager(),
