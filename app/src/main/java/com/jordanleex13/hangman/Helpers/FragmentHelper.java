@@ -5,7 +5,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
 /**
- * Created by Jordan on 16-07-04.
+ * Helper to assist in fragment transitions
  */
 public class FragmentHelper {
 

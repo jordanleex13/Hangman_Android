@@ -10,7 +10,6 @@ import android.util.Log;
 
 /**
  * Runnable that changes the background colour of an image and caches that single bitmap inside the BitmapHelper LruCache
- *
  */
 public class RunnableCacheBitmap implements Runnable {
 

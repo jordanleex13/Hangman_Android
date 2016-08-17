@@ -1,0 +1,42 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.jordanleex13.hangman.FragmentUserStats">
+
+    <LinearLayout
+        android:id="@+id/fragment_user_stats_player_info"
+        android:layout_margin="@dimen/medium_margin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="User"
+            android:textSize="@dimen/medium_text"
+            android:fontFamily="sans-serif-light"
+            />
+        <Spinner
+            android:id="@+id/fragment_user_stats_spinner_username"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+        </Spinner>
+
+    </LinearLayout>
+
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/fragment_user_stats_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/fragment_user_stats_player_info"
+        android:fastScrollEnabled="true" >
+    </android.support.v7.widget.RecyclerView>
+
+</RelativeLayout>

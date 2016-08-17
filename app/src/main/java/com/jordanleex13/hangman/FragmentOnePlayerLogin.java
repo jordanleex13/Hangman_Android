@@ -162,7 +162,16 @@ public class FragmentOnePlayerLogin extends Fragment implements View.OnClickList
 
                 break;
             case R.id.menu_statistics:
-                Log.d(TAG, "Statistics");
+                Log.d(TAG, "Launching Statistics");
+
+                if (checkName()) {
+                    Fragment newFragment = FragmentUserStats.newInstance(mUsers, mUserId);
+                    FragmentHelper.swapFragments(getActivity().getSupportFragmentManager(),
+                            R.id.activity_one_player_container, newFragment,
+                            false, true, TAG, FragmentUserStats.TAG);
+                }
+
+
                 break;
             default:
                 Log.e(TAG, "Unknown menu click : " + item.getItemId());
@@ -182,7 +191,6 @@ public class FragmentOnePlayerLogin extends Fragment implements View.OnClickList
 
                     Assert.assertTrue(selectedCategory != null && selectedDifficulty != null);
 
-
                     Fragment newFragment = FragmentOnePlayerGamePlay.newInstance(selectedCategory, selectedDifficulty, mUserId);
                     FragmentHelper.swapFragments(getActivity().getSupportFragmentManager(),
                             R.id.activity_one_player_container, newFragment,
@@ -196,24 +204,29 @@ public class FragmentOnePlayerLogin extends Fragment implements View.OnClickList
         }
     }
 
+    private boolean checkName() {
+        String name = mUsernameSpinner.getSelectedItem().toString();
+
+        if (name.isEmpty()) {
+            return false;
+        } else {
+            Cursor cursor = mDatabaseHelper.getReadableDatabase().rawQuery(
+                    "SELECT _id FROM users WHERE name = ?", new String[] {name}
+            );
+            cursor.moveToFirst();
+
+            mUserId = cursor.getInt(0);
+            Log.e(TAG, "User name : " + name + "\tUser ID : " + String.valueOf(mUserId));
+
+            return true;
+
+        }
+    }
     private boolean validationCheck() {
         boolean readyToStart = true;
 
         if (!mUsers.isEmpty()) {
-            String name = mUsernameSpinner.getSelectedItem().toString();
-
-            if (name.isEmpty()) {
-                readyToStart = false;
-            } else {
-                Cursor cursor = mDatabaseHelper.getReadableDatabase().rawQuery(
-                        "SELECT _id FROM users WHERE name = ?", new String[] {name}
-                );
-                cursor.moveToFirst();
-
-                mUserId = cursor.getInt(0);
-                Log.e(TAG, "User name : " + name + "\tUser ID : " + String.valueOf(mUserId));
-
-            }
+            readyToStart = checkName();
 
         } else {
             readyToStart = false;

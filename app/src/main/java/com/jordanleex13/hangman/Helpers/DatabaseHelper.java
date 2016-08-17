@@ -51,13 +51,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     }
 
+    /**
+     * Method to be used onUpgrade to add new categories
+     * Is not user specific since everyone will start off with 0 wins/losses in the new category
+     * @param db
+     * @param category
+     */
     private void insertNewCategoryColumns(SQLiteDatabase db, String category) {
 
-        String winColumn = category + "_wins";
-        String loseColumn = category + "_losses";
+        // Sanity check
+        category = category.toLowerCase();
 
-        String upgradeQuery1 = "ALTER TABLE users ADD COLUMN " + winColumn + " INTEGER NOT NULL DEFAULT 0";
-        String upgradeQuery2 = "ALTER TABLE users ADD COLUMN " + loseColumn + " INTEGER NOT NULL DEFAULT 0";
+        String winColumn = category + "Wins";
+        String loseColumn = category + "Losses";
+
+        String upgradeQuery1 = "ALTER TABLE userStats ADD COLUMN " + winColumn + " INTEGER NOT NULL DEFAULT 0";
+        String upgradeQuery2 = "ALTER TABLE userStats ADD COLUMN " + loseColumn + " INTEGER NOT NULL DEFAULT 0";
 
         db.execSQL(upgradeQuery1);
         db.execSQL(upgradeQuery2);

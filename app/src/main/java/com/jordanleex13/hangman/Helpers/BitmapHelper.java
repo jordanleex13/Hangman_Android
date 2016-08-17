@@ -2,6 +2,7 @@ package com.jordanleex13.hangman.Helpers;
 
 import android.graphics.Bitmap;
 import android.support.v4.util.LruCache;
+import android.util.Log;
 
 /**
  * Fully static class to control access to the hangman images
@@ -39,7 +40,12 @@ public class BitmapHelper {
     }
 
     public static Bitmap getBitmapFromMemCache(String key) {
-        return mMemoryCache.get(key);
+        if (mMemoryCache.get(key) == null) {
+            Log.e(TAG, "No bitmap in memory");
+            return null;
+        } else {
+            return mMemoryCache.get(key);
+        }
     }
 
 

@@ -6,25 +6,22 @@ import android.database.Cursor;
 import android.util.Log;
 
 /**
- * Created by Jordan on 16-08-15.
+ * Runnable that saves post-game data to the database for a specific user
  */
 public class RunnableSaveData implements Runnable {
 
     private static final String TAG = RunnableSaveData.class.getSimpleName();
 
-    private Context mContext;
-    private boolean win;    //true if win, false if lose
-    private String mCategory;
-    private int mUserId;
+    private boolean win;            // true if win, false if lose
+    private String mCategory;       // the category the user just played from
+    private int mUserId;            // the user's ID
     private DatabaseHelper mDatabaseHelper;
 
     public RunnableSaveData(Context c, boolean result, String category, int id) {
-        mContext = c;
         win = result;
         mCategory = category;
-
         mUserId = id;
-        mDatabaseHelper = new DatabaseHelper(mContext);
+        mDatabaseHelper = new DatabaseHelper(c);
     }
 
     @Override
@@ -33,6 +30,8 @@ public class RunnableSaveData implements Runnable {
         ContentValues cv = new ContentValues();
 
         if (win) {
+
+            // If the user wins, update the totalWins and category specific wins
 
             String columnName = mCategory.toLowerCase() + "Wins";
             String query = "SELECT totalWins, " + columnName + " FROM userStats WHERE userId = ?";
@@ -44,7 +43,10 @@ public class RunnableSaveData implements Runnable {
             cv.put("totalWins", winCursor.getInt(0) + 1);
             cv.put(columnName, winCursor.getInt(1) + 1);
             winCursor.close();
+
         } else {
+
+            // If the user loses, update the totalLosses and category specific losses
 
             String columnName = mCategory.toLowerCase() + "Losses";
             String query = "SELECT totalLosses, " + columnName + " FROM userStats WHERE userId = ?";
