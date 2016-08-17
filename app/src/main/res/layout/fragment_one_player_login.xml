@@ -17,19 +17,17 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="Player Name"
+            android:text="User"
             android:textSize="@dimen/medium_text"
             android:fontFamily="sans-serif-light"
             />
-        <EditText
-            android:id="@+id/fragment_one_player_login_player_name"
-            android:text="Jordan"
+        <Spinner
+            android:id="@+id/fragment_one_player_login_spinner_username"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:inputType="textPersonName"
-            android:fontFamily="sans-serif-light"
-            />
+            android:layout_weight="1">
+
+        </Spinner>
 
     </LinearLayout>
 

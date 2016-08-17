@@ -20,6 +20,7 @@ public class ActivityMain extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Add in the title fragment
         FragmentTitle newFragment = FragmentTitle.newInstance();
         FragmentHelper.swapFragments(getSupportFragmentManager(), R.id.activity_main_container,
                 newFragment, true, false, null, FragmentTitle.TAG);

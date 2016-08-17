@@ -13,6 +13,7 @@ public class BitmapHelper {
     public static final int NUM_OF_HANGMAN_STAGES = 9;
 
     // The cache of all the images
+    // The keys to access the bitmaps are the stage numbers [0-8]
     private static LruCache<String, Bitmap> mMemoryCache = createCache();
 
     private static LruCache<String, Bitmap> createCache() {

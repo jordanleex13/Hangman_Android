@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * Created by Jordan on 16-08-11.
+ * Fully static class with methods to assist in file and resource IO
  */
 public class FileHelper {
 
@@ -26,7 +26,6 @@ public class FileHelper {
             br = new BufferedReader(new InputStreamReader(c.getResources().openRawResource(resId)));
 
             while ((sCurrentLine = br.readLine()) != null) {
-                System.out.println(sCurrentLine);
                 mWordList.add(sCurrentLine);
             }
 

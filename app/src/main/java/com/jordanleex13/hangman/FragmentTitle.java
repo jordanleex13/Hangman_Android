@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
 
 public class FragmentTitle extends Fragment implements View.OnClickListener {
 
@@ -53,7 +52,6 @@ public class FragmentTitle extends Fragment implements View.OnClickListener {
         switch(v.getId()) {
             case R.id.fragment_title_button_one_player:
 
-                Toast.makeText(getActivity(), "Single Player", Toast.LENGTH_SHORT).show();
                 Intent singlePlayerIntent = new Intent(getActivity(), ActivityOnePlayer.class);
                 getActivity().startActivity(singlePlayerIntent);
 
@@ -61,14 +59,13 @@ public class FragmentTitle extends Fragment implements View.OnClickListener {
 
             case R.id.fragment_title_button_two_players:
 
-                Toast.makeText(getActivity(), "Two Player", Toast.LENGTH_SHORT).show();
                 Intent twoPlayerIntent = new Intent(getActivity(), ActivityTwoPlayer.class);
                 getActivity().startActivity(twoPlayerIntent);
 
                 break;
 
             default:
-                Log.e(TAG, "Should not get here");
+                Log.e(TAG, "Unknown click registered " + v.getId());
                 break;
         }
     }

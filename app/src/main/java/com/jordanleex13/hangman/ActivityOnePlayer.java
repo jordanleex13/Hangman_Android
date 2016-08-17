@@ -13,8 +13,6 @@ public class ActivityOnePlayer extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_one_player);
 
-
-
         Fragment newFragment = FragmentOnePlayerLogin.newInstance();
         FragmentHelper.swapFragments(getSupportFragmentManager(), R.id.activity_one_player_container,
                 newFragment, true, false, null, FragmentOnePlayerLogin.TAG);
@@ -24,7 +22,6 @@ public class ActivityOnePlayer extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
-
     }
+
 }

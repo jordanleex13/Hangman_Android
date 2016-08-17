@@ -9,30 +9,36 @@ import android.graphics.Paint;
 import android.util.Log;
 
 /**
- * Runnable that caches a single bitmap inside the BitmapHelper LruCache
+ * Runnable that changes the background colour of an image and caches that single bitmap inside the BitmapHelper LruCache
+ *
  */
 public class RunnableCacheBitmap implements Runnable {
 
-    private int data = 0;
-    private String index;
+    private int mId;
+    private String mKey;
     private Context mContext;
 
-    public RunnableCacheBitmap(Context c, int d, String i) {
+    /**
+     * Constructor
+     * @param c         the context
+     * @param resId     the id of the drawable resource
+     * @param cacheKey  the key which will be used in accessing the cache. Corresponds with the stage number
+     */
+    public RunnableCacheBitmap(Context c, int resId, String cacheKey) {
         mContext = c;
-        data = d;
-        index = i;
+        mId = resId;
+        mKey = cacheKey;
 
     }
 
     @Override
     public void run() {
 
-        Bitmap src = BitmapFactory.decodeResource(mContext.getResources(), data);
+        Bitmap src = BitmapFactory.decodeResource(mContext.getResources(), mId);
 
         // image size
         int width = src.getWidth();
         int height = src.getHeight();
-        // create output bitmap
 
         // create a mutable empty bitmap
         Bitmap bmOut = Bitmap.createBitmap(width, height, src.getConfig());
@@ -57,16 +63,17 @@ public class RunnableCacheBitmap implements Runnable {
 
 
                 A = Color.alpha(pixel);
-                // apply filter contrast for every channel R, G, B
                 R = Color.red(pixel);
                 G = Color.green(pixel);
                 B = Color.blue(pixel);
 
+                // Change all the non-blackish parts to white
                 if (R > 50 || G > 50 || B > 50) {
                     R = 255;
                     G = 255;
                     B = 255;
                 }
+
                 if (R < 0) {
                     R = 0;
                 } else if (R > 255) {
@@ -78,8 +85,6 @@ public class RunnableCacheBitmap implements Runnable {
                 } else if (G > 255) {
                     G = 255;
                 }
-
-
                 if (B < 0) {
                     B = 0;
                 } else if (B > 255) {
@@ -91,7 +96,7 @@ public class RunnableCacheBitmap implements Runnable {
             }
         }
 
-        BitmapHelper.addBitmapToMemoryCache(index, bmOut);
-        Log.e("RunnableCacheBitmap", "Caching image in index num : " + index);
+        BitmapHelper.addBitmapToMemoryCache(mKey, bmOut);
+        Log.i("RunnableCacheBitmap", "Caching image with key : " + mKey);
     }
 }

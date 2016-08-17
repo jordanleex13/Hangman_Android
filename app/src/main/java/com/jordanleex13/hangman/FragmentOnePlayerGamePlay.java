@@ -23,6 +23,7 @@ import android.widget.TextView;
 
 import com.jordanleex13.hangman.Helpers.BitmapHelper;
 import com.jordanleex13.hangman.Helpers.FileHelper;
+import com.jordanleex13.hangman.Helpers.RunnableSaveData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,11 +62,14 @@ public class FragmentOnePlayerGamePlay extends Fragment implements View.OnClickL
     private ImageView mHangman;
     private Button mConcedeButton;
 
-    public static FragmentOnePlayerGamePlay newInstance(String category, String difficulty) {
+    private int mUserId;
+
+    public static FragmentOnePlayerGamePlay newInstance(String category, String difficulty, int id) {
         FragmentOnePlayerGamePlay fragment = new FragmentOnePlayerGamePlay();
         Bundle args = new Bundle();
         args.putString("category", category);
         args.putString("difficulty", difficulty);
+        args.putInt("userId", id);
         fragment.setArguments(args);
         return fragment;
     }
@@ -76,7 +80,11 @@ public class FragmentOnePlayerGamePlay extends Fragment implements View.OnClickL
 
         mCategory = getArguments().getString("category");
         mDifficulty = getArguments().getString("difficulty");
+        mUserId = getArguments().getInt("userId");
+
         Log.d(TAG, "Text file : " + mCategory + "_" + mDifficulty);
+
+        //FYI both arguments are lower case
         setUpWord();
 
     }
@@ -157,8 +165,8 @@ public class FragmentOnePlayerGamePlay extends Fragment implements View.OnClickL
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+
             case R.id.fragment_one_player_game_play_give_up:
-//                Toast.makeText(getActivity(), "Secret word was '" + mWord + "'", Toast.LENGTH_LONG).show();
                 returnToPrevious();
                 break;
 
@@ -208,13 +216,13 @@ public class FragmentOnePlayerGamePlay extends Fragment implements View.OnClickL
     private void setGridListeners() {
 
         final int size = mAlphabetGrid.getChildCount();
+
         Log.e(TAG, "size of grid layout : " + String.valueOf(size));
 
         for (int i = 0; i < size; ++i ) {
             TextView temp = (TextView) mAlphabetGrid.getChildAt(i);
             temp.setId(GRID_LAYOUT_ID);
             temp.setOnClickListener(this);
-            Log.e(TAG, temp.getText().toString());
         }
     }
 
@@ -254,6 +262,7 @@ public class FragmentOnePlayerGamePlay extends Fragment implements View.OnClickL
                     ++numOfFoundLetters;
 
                     if (numOfFoundLetters == (mWordLength - numOfNonLetters)) {
+                        saveResults(true);
                         showAlertDialog("You win!");
                     }
                 }
@@ -270,6 +279,7 @@ public class FragmentOnePlayerGamePlay extends Fragment implements View.OnClickL
 
                 if (numOfWrongGuesses == 8) {
                     fillInRestOfLetters();
+                    saveResults(false);
                     showAlertDialog("CPU Wins!");
                 }
 
@@ -335,6 +345,10 @@ public class FragmentOnePlayerGamePlay extends Fragment implements View.OnClickL
         wmlp.y = 100;   //y position
 
         dialog.show();
+    }
+
+    private void saveResults(boolean win) {
+        new Thread(new RunnableSaveData(getActivity(), win, mCategory, mUserId)).start();
     }
 
 }
