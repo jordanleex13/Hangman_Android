@@ -13,6 +13,7 @@ import android.util.Log;
  */
 public class RunnableCacheBitmap implements Runnable {
 
+    private static final String TAG = RunnableCacheBitmap.class.getSimpleName();
     private int mId;
     private String mKey;
     private Context mContext;
@@ -24,6 +25,7 @@ public class RunnableCacheBitmap implements Runnable {
      * @param cacheKey  the key which will be used in accessing the cache. Corresponds with the stage number
      */
     public RunnableCacheBitmap(Context c, int resId, String cacheKey) {
+        Log.e(TAG, "CONSTRUCTOR");
         mContext = c;
         mId = resId;
         mKey = cacheKey;
@@ -33,6 +35,7 @@ public class RunnableCacheBitmap implements Runnable {
     @Override
     public void run() {
 
+        Log.d(TAG, "starting to run " + mKey);
         Bitmap src = BitmapFactory.decodeResource(mContext.getResources(), mId);
 
         // image size
@@ -96,6 +99,6 @@ public class RunnableCacheBitmap implements Runnable {
         }
 
         BitmapHelper.addBitmapToMemoryCache(mKey, bmOut);
-        Log.i("RunnableCacheBitmap", "Caching image with key : " + mKey);
+        Log.i(TAG, "Caching image with key : " + mKey);
     }
 }

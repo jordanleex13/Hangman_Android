@@ -98,7 +98,14 @@ public class FragmentOnePlayerGamePlay extends Fragment implements View.OnClickL
 
         // Set initial image
         mHangman = (ImageView) v.findViewById(R.id.fragment_one_player_game_play_hangman_image);
-        mHangman.setImageBitmap(BitmapHelper.getBitmapFromMemCache("0"));
+        Bitmap bm = BitmapHelper.getBitmapFromMemCache("0");
+        if (bm == null) {
+            int resId = FileHelper.getStringIdentifier(getActivity(), "stage0", "drawable");
+            mHangman.setImageResource(resId);
+        } else {
+            mHangman.setImageBitmap(bm);
+
+        }
 
         Log.d(TAG, "Word length : " + String.valueOf(mWordLength));
 
@@ -167,6 +174,8 @@ public class FragmentOnePlayerGamePlay extends Fragment implements View.OnClickL
         switch (v.getId()) {
 
             case R.id.fragment_one_player_game_play_give_up:
+                // Counts as a loss
+                saveResults(false);
                 returnToPrevious();
                 break;
 
@@ -288,6 +297,8 @@ public class FragmentOnePlayerGamePlay extends Fragment implements View.OnClickL
                     mHangman.setImageBitmap(bm);
                 } else {
                     Log.e(TAG, "Error loading image from cache");
+                    int resId = FileHelper.getStringIdentifier(getActivity(), "stage" + numOfWrongGuesses, "drawable");
+                    mHangman.setImageResource(resId);
                 }
             }
         }
