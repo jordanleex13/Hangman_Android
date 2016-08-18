@@ -92,7 +92,11 @@ public class FragmentUserStats extends Fragment implements AdapterView.OnItemSel
         return v;
     }
 
-
+    @Override
+    public void onDestroy() {
+        mDatabaseHelper.close();
+        super.onDestroy();
+    }
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {

@@ -28,11 +28,9 @@ import com.jordanleex13.hangman.Helpers.RunnableSaveData;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link FragmentOnePlayerGamePlay#newInstance} factory method to
- * create an instance of this fragment.
+ * Fragment where user tries to guess the hidden word. User has 8 tries to guess correctly. UI elements
+ * are updated accordingly after a user guess
  */
 public class FragmentOnePlayerGamePlay extends Fragment implements View.OnClickListener{
 
@@ -296,7 +294,7 @@ public class FragmentOnePlayerGamePlay extends Fragment implements View.OnClickL
                 if (bm != null) {
                     mHangman.setImageBitmap(bm);
                 } else {
-                    Log.e(TAG, "Error loading image from cache");
+                    Log.e(TAG, "Error loading image from cache. Setting default drawable");
                     int resId = FileHelper.getStringIdentifier(getActivity(), "stage" + numOfWrongGuesses, "drawable");
                     mHangman.setImageResource(resId);
                 }
@@ -341,7 +339,6 @@ public class FragmentOnePlayerGamePlay extends Fragment implements View.OnClickL
                         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                         startActivity(intent);
                         returnToPrevious();
-
 
                     }
                 });

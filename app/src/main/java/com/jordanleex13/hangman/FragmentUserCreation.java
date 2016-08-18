@@ -60,6 +60,12 @@ public class FragmentUserCreation extends DialogFragment implements View.OnClick
         return v;
     }
 
+    @Override
+    public void onDestroy() {
+        mDatabaseHelper.close();
+        super.onDestroy();
+    }
+
     private boolean validationCheck() {
         boolean readyToStart = true;
 

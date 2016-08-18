@@ -52,9 +52,15 @@ public class ActivityMain extends AppCompatActivity {
      * Method that spawns multiple threads which cache an image then close
      */
     private void startCachingImages() {
+
         for (int i = 0; i < BitmapHelper.NUM_OF_HANGMAN_STAGES; i++) {
-            int resId = FileHelper.getStringIdentifier(this, "stage" + i, "drawable");
-            new Thread(new RunnableCacheBitmap(this, resId, String.valueOf(i))).start();
+            if (BitmapHelper.getBitmapFromMemCache(String.valueOf(i)) == null) {
+                int resId = FileHelper.getStringIdentifier(this, "stage" + i, "drawable");
+                new Thread(new RunnableCacheBitmap(this, resId, String.valueOf(i))).start();
+            } else {
+                Log.d(TAG, "Already cached stage" + String.valueOf(i));
+            }
+
         }
     }
 }

@@ -64,6 +64,7 @@ public class RunnableSaveData implements Runnable {
         mDatabaseHelper.getWritableDatabase().update("userStats", cv,
                 "userId = ?", new String[]{String.valueOf(mUserId)});
 
+        mDatabaseHelper.close();
         Log.e(TAG, "Closing runnable");
     }
 }

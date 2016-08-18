@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.jordanleex13.hangman.Helpers.DatabaseHelper;
 import com.jordanleex13.hangman.Helpers.FragmentHelper;
+import com.jordanleex13.hangman.Models.CategoryData;
 
 import junit.framework.Assert;
 
@@ -31,7 +32,9 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
 
-
+/**
+ * Fragment login where a user, difficulty, and a category(s) are selected.
+ */
 public class FragmentOnePlayerLogin extends Fragment implements View.OnClickListener,
         CompoundButton.OnCheckedChangeListener, FragmentUserCreation.OnUserCreatedListener {
 
@@ -48,7 +51,6 @@ public class FragmentOnePlayerLogin extends Fragment implements View.OnClickList
     private DatabaseHelper mDatabaseHelper;
 
     private HashMap<String, Boolean> checkedHashMap;
-    public static final int NUM_OF_CATEGORIES = 6;
     private CheckBox animals;
     private CheckBox science;
     private CheckBox sports;
@@ -62,6 +64,8 @@ public class FragmentOnePlayerLogin extends Fragment implements View.OnClickList
     private int checkboxCounter;
 
     private int mUserId = 0;
+
+    private Toast mToast;
 
     public static FragmentOnePlayerLogin newInstance() {
         FragmentOnePlayerLogin fragment = new FragmentOnePlayerLogin();
@@ -77,7 +81,7 @@ public class FragmentOnePlayerLogin extends Fragment implements View.OnClickList
         Log.e(TAG, "On create");
         setHasOptionsMenu(true);
         mDatabaseHelper = new DatabaseHelper(getActivity());
-        checkedHashMap = new HashMap<>(NUM_OF_CATEGORIES);
+        checkedHashMap = new HashMap<>(CategoryData.NUM_OF_CATEGORIES);
     }
 
     @Override
@@ -88,6 +92,9 @@ public class FragmentOnePlayerLogin extends Fragment implements View.OnClickList
 
         // Reset checkbox counter
         checkboxCounter = 0;
+
+        // Have one toast for the entire fragment
+        mToast = new Toast(getActivity());
 
         View v = inflater.inflate(R.layout.fragment_one_player_login, container, false);
 
@@ -121,10 +128,6 @@ public class FragmentOnePlayerLogin extends Fragment implements View.OnClickList
     @Override
     public void onResume() {
         super.onResume();
-        Log.e(TAG, "oResume");
-
-//        getActivity().getActionBar().setTitle("One Player");
-//        getActivity().getActionBar().setDisplayHomeAsUpEnabled(false);
 
         updateSpinner(false);
 
@@ -146,6 +149,11 @@ public class FragmentOnePlayerLogin extends Fragment implements View.OnClickList
         super.onPause();
     }
 
+    @Override
+    public void onDestroy() {
+        mDatabaseHelper.close();
+        super.onDestroy();
+    }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -161,8 +169,8 @@ public class FragmentOnePlayerLogin extends Fragment implements View.OnClickList
                 openCreateUserDialog();
 
                 break;
+
             case R.id.menu_statistics:
-                Log.d(TAG, "Launching Statistics");
 
                 if (checkName()) {
                     Fragment newFragment = FragmentUserStats.newInstance(mUsers, mUserId);
@@ -173,6 +181,7 @@ public class FragmentOnePlayerLogin extends Fragment implements View.OnClickList
 
 
                 break;
+
             default:
                 Log.e(TAG, "Unknown menu click : " + item.getItemId());
                 break;
@@ -204,6 +213,11 @@ public class FragmentOnePlayerLogin extends Fragment implements View.OnClickList
         }
     }
 
+    /**
+     * Ensures there is a name currently displayed in the spinner. Also initializes the userId corresponding
+     * to that name
+     * @return      True if there is a name, false otherwise
+     */
     private boolean checkName() {
         String name = mUsernameSpinner.getSelectedItem().toString();
 
@@ -222,6 +236,11 @@ public class FragmentOnePlayerLogin extends Fragment implements View.OnClickList
 
         }
     }
+
+    /**
+     * Method to check that all fields are filled out (name, difficulty, category)
+     * @return  True if everything is valid, false otherwise
+     */
     private boolean validationCheck() {
         boolean readyToStart = true;
 
@@ -242,8 +261,9 @@ public class FragmentOnePlayerLogin extends Fragment implements View.OnClickList
             readyToStart = false;
         }
 
+
         if (checkboxCounter == 0) {
-            Toast.makeText(getActivity(), "Select at least one category", Toast.LENGTH_SHORT).show();
+            showToast("Select at least one category");
             readyToStart = false;
         } else {
             // Parse through all checkboxes
@@ -272,6 +292,22 @@ public class FragmentOnePlayerLogin extends Fragment implements View.OnClickList
         return readyToStart;
     }
 
+    /**
+     * Utility method to ensure multiple clicks of a toast don't stack
+     * @param st        the message to toast
+     */
+    private void showToast (String st) {
+
+        try{
+            if (mToast.getView().isShown()) {
+                mToast.setText(st);
+            }
+        } catch (Exception e) {         // invisible if exception
+            Log.e(TAG, "Toast invisible. Create a new one");
+            mToast = Toast.makeText(getActivity(), st, Toast.LENGTH_SHORT);
+        }
+        mToast.show();  //finally display it
+    }
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -280,7 +316,6 @@ public class FragmentOnePlayerLogin extends Fragment implements View.OnClickList
         checkedHashMap.put(buttonView.getText().toString().toLowerCase(), isChecked);
 
         // Just quick way to check if nothing is checked. An optimization
-
         if (isChecked) {
             ++checkboxCounter;
         } else {
@@ -324,17 +359,24 @@ public class FragmentOnePlayerLogin extends Fragment implements View.OnClickList
         // notify the adapter that the underlying view should be redrawn
         mAdapter.notifyDataSetChanged();
 
+        // set the selection to the newly created user
         if (newUser) {
             mUsernameSpinner.setSelection(mUsers.size());
         }
     }
 
+    /**
+     * Opens a dialog fragment where a user is created
+     */
     private void openCreateUserDialog() {
         FragmentUserCreation newFragment = FragmentUserCreation.newInstance();
         newFragment.setFragmentListener(this);
         newFragment.show(getActivity().getSupportFragmentManager(), "show");
     }
 
+    /**
+     * Callback from FragmentUserCreation
+     */
     @Override
     public void newUserCreated() {
         updateSpinner(true);

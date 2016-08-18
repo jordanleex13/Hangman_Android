@@ -13,6 +13,7 @@ public class CategoryData {
     public static final String POKEMON = "pokemon";
 
     public static final String[] CATEGORY_LIST = {ANIMALS, SCIENCE, SPORTS, PEOPLE, LANDMARKS, POKEMON};
+    public static final int NUM_OF_CATEGORIES = 6;
 
     private String mCategory;
     private int mWins;
