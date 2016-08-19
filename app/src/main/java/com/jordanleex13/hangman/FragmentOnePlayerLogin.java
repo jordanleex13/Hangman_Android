@@ -44,7 +44,6 @@ public class FragmentOnePlayerLogin extends Fragment implements View.OnClickList
 
     private Spinner mUsernameSpinner;
     private ArrayAdapter mAdapter;
-    private ArrayList<String> mUsers = new ArrayList<>();
 
     private RadioGroup cpuDifficulty;
     private RadioButton selectedCpuDifficulty;      // set to medium by default
@@ -105,7 +104,7 @@ public class FragmentOnePlayerLogin extends Fragment implements View.OnClickList
 
         mUsernameSpinner = (Spinner) v.findViewById(R.id.fragment_one_player_login_spinner_username);
         // create and link the adapter to the spinner object
-        mAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, mUsers);
+        mAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, ActivityOnePlayer.mUsers);
         mUsernameSpinner.setAdapter(mAdapter);
 
         animals = (CheckBox) v.findViewById(R.id.fragment_one_player_login_category_animals);
@@ -132,7 +131,6 @@ public class FragmentOnePlayerLogin extends Fragment implements View.OnClickList
         ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("One Player");
         ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         ((AppCompatActivity)getActivity()).getSupportActionBar().setHomeButtonEnabled(true);
-
         super.onActivityCreated(savedInstanceState);
     }
 
@@ -189,8 +187,10 @@ public class FragmentOnePlayerLogin extends Fragment implements View.OnClickList
 
             case R.id.menu_statistics:
 
-                if (checkName()) {
-                    Fragment newFragment = FragmentUserStats.newInstance(mUsers, mUserId);
+                if (ActivityOnePlayer.mUsers.isEmpty()) {
+                    Toast.makeText(getActivity(), "Please create a user", Toast.LENGTH_SHORT).show();
+                } else if (checkName()) {
+                    Fragment newFragment = FragmentUserStats.newInstance(mUsernameSpinner.getSelectedItem().toString());
                     FragmentHelper.swapFragments(getActivity().getSupportFragmentManager(),
                             R.id.activity_one_player_container, newFragment,
                             false, true, TAG, FragmentUserStats.TAG);
@@ -261,7 +261,7 @@ public class FragmentOnePlayerLogin extends Fragment implements View.OnClickList
     private boolean validationCheck() {
         boolean readyToStart = true;
 
-        if (!mUsers.isEmpty()) {
+        if (!ActivityOnePlayer.mUsers.isEmpty()) {
             readyToStart = checkName();
 
         } else {
@@ -343,7 +343,7 @@ public class FragmentOnePlayerLogin extends Fragment implements View.OnClickList
     private void updateSpinner(boolean newUser) {
 
         // clear any existing user entries
-        mUsers.clear();
+        ActivityOnePlayer.mUsers.clear();
 
         // query the database for all users' names
         Cursor cursor = mDatabaseHelper.getReadableDatabase().rawQuery(
@@ -356,7 +356,8 @@ public class FragmentOnePlayerLogin extends Fragment implements View.OnClickList
 
                 // add the user-name to the list of users
                 String username = cursor.getString(0);
-                mUsers.add(username);
+                Log.e(TAG, username);
+                ActivityOnePlayer.mUsers.add(username);
 
                 cursor.moveToNext();
             }
@@ -376,9 +377,10 @@ public class FragmentOnePlayerLogin extends Fragment implements View.OnClickList
         // notify the adapter that the underlying view should be redrawn
         mAdapter.notifyDataSetChanged();
 
+        Log.e(TAG, "Size of users : " + ActivityOnePlayer.mUsers.size());
         // set the selection to the newly created user
         if (newUser) {
-            mUsernameSpinner.setSelection(mUsers.size());
+            mUsernameSpinner.setSelection(ActivityOnePlayer.mUsers.size());
         }
     }
 
@@ -392,7 +394,7 @@ public class FragmentOnePlayerLogin extends Fragment implements View.OnClickList
     }
 
     /**
-     * Callback from FragmentUserCreation
+     * Callback from FragmentUserCreation. User was created so update the spinner
      */
     @Override
     public void newUserCreated() {

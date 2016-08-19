@@ -11,6 +11,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -33,21 +36,20 @@ public class FragmentUserStats extends Fragment implements AdapterView.OnItemSel
 
     private Spinner mSpinner;
     private ArrayAdapter<String> mSpinnerAdapter;
-    private ArrayList<String> mUsers = new ArrayList<>();
 
     private RecyclerView mRecyclerView;
     private RVAdapterUserStats mRVAdapter;
 
-    private int mUserId;
+    private String mCurrName;
     private DatabaseHelper mDatabaseHelper;
 
-    private ArrayList<CategoryData> mCurrUserData;
+    // ArrayList for a user's stats
+    private ArrayList<CategoryData> mCurrUserData = new ArrayList<>();
 
-    public static FragmentUserStats newInstance(ArrayList<String> users, int userId) {
+    public static FragmentUserStats newInstance(String name) {
         FragmentUserStats fragment = new FragmentUserStats();
         Bundle args = new Bundle();
-        args.putStringArrayList("userList", users);
-        args.putInt("userId", userId);
+        args.putString("username", name);
         fragment.setArguments(args);
         return fragment;
     }
@@ -55,11 +57,14 @@ public class FragmentUserStats extends Fragment implements AdapterView.OnItemSel
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mUsers = getArguments().getStringArrayList("userList");
+
+        setHasOptionsMenu(true);
+
         mDatabaseHelper = new DatabaseHelper(getActivity());
 
-        // Just load the first user
-        mCurrUserData = generateCategoryArrayList(1);
+        // If there was a name selected in Login, then load the same name here
+        mCurrName = getArguments().getString("username");
+
     }
 
     @Override
@@ -71,14 +76,12 @@ public class FragmentUserStats extends Fragment implements AdapterView.OnItemSel
         mSpinner = (Spinner) v.findViewById(R.id.fragment_user_stats_spinner_username);
 
         // create and link the adapter to the spinner object
-        mSpinnerAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, mUsers);
+        mSpinnerAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, ActivityOnePlayer.mUsers);
         mSpinner.setAdapter(mSpinnerAdapter);
         mSpinner.setOnItemSelectedListener(this);
 
-        int initialId = getArguments().getInt("userId");
-
-        // The spinner is 0 based
-        mSpinner.setSelection(initialId-1);
+        // The spinner is 0 based, like an arraylist which is why this works
+        mSpinner.setSelection(ActivityOnePlayer.mUsers.indexOf(mCurrName));
 
         mRecyclerView = (RecyclerView) v.findViewById(R.id.fragment_user_stats_recycler);
         mRecyclerView.setHasFixedSize(true);
@@ -97,6 +100,8 @@ public class FragmentUserStats extends Fragment implements AdapterView.OnItemSel
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("User Statistics");
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setHomeButtonEnabled(true);
         super.onActivityCreated(savedInstanceState);
     }
 
@@ -107,26 +112,33 @@ public class FragmentUserStats extends Fragment implements AdapterView.OnItemSel
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.user_stats_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_delete_user:
+                Log.e(TAG, "Deleting user with name " + mCurrName);
+                deleteUser(mCurrName);
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-        String selectedItem = parent.getItemAtPosition(position).toString();
-        Log.e(TAG, selectedItem);
+        String selectedName = parent.getItemAtPosition(position).toString();
+        Log.d(TAG, "On item selected : " + selectedName);
 
-        // Position 0 in the spinner corresponds to userId 1 in the database
-        System.out.println(position + 1);
+        mCurrName = selectedName;
+        updateRecyclerView(mCurrName);
 
-        mCurrUserData = generateCategoryArrayList(position+1);
-        mRVAdapter.updateArrayList(mCurrUserData);
-        mRVAdapter.notifyDataSetChanged();
+        easterEggs(selectedName);
 
-        easterEggs(selectedItem);
-
-    }
-    private void easterEggs(String selectedItem) {
-
-        if(selectedItem.equals("Ash")) {
-            Toast.makeText(getActivity(), "GOTTA CATCH EM ALL", Toast.LENGTH_LONG).show();
-        }
     }
 
     @Override
@@ -135,14 +147,25 @@ public class FragmentUserStats extends Fragment implements AdapterView.OnItemSel
         returnToPrevious();
     }
 
+
+
+
+
+
     private void returnToPrevious() {
         getActivity().getSupportFragmentManager().popBackStackImmediate();
     }
 
 
-    private ArrayList<CategoryData> generateCategoryArrayList(int userId) {
+    /**
+     * Generates arraylist of user stats for the recycler view
+     * @param name      the name of user
+     * @return          arraylist of all the user's stats
+     */
+    private ArrayList<CategoryData> generateCategoryArrayList(String name) {
 
-        Log.e(TAG, "USER ID: " + String.valueOf(userId));
+        int userId = mDatabaseHelper.getUserIdFromName(name);
+
         ArrayList<CategoryData> arrayList = new ArrayList<>();
 
         Cursor c = mDatabaseHelper.getReadableDatabase().rawQuery(
@@ -171,6 +194,58 @@ public class FragmentUserStats extends Fragment implements AdapterView.OnItemSel
             c.close();
         }
         return arrayList;
+    }
+
+    /**
+     * Method to delete a user's stats and a user from the database
+     * @param name      name of the user to be deleted
+     */
+    private void deleteUser(String name) {
+
+        for (int i = 0; i< ActivityOnePlayer.mUsers.size(); ++i) {
+            Log.d(TAG, "Name : " + ActivityOnePlayer.mUsers.get(i) + "\t ID: " + mDatabaseHelper.getUserIdFromName(ActivityOnePlayer.mUsers.get(i)));
+        }
+
+        int userId = mDatabaseHelper.getUserIdFromName(name);
+
+        // delete the user's exercise (session) data
+        mDatabaseHelper.getWritableDatabase().delete(
+                "userStats", "userId = " + userId, null);
+
+        // delete the user's injury data
+        mDatabaseHelper.getWritableDatabase().delete(
+                "users", "_id = " + userId, null);
+
+        ActivityOnePlayer.mUsers.remove(name);
+        mSpinnerAdapter.notifyDataSetChanged();
+
+        if (ActivityOnePlayer.mUsers.isEmpty()) {
+            Log.e(TAG, "No users left. Returning to previous fragment");
+            returnToPrevious();
+        } else {
+            mCurrName = mSpinner.getSelectedItem().toString();
+            updateRecyclerView(mCurrName);
+        }
+
+    }
+
+    /**
+     * Updates the recycler view with the user's stats.
+     * @param name      the name of the current user listed in the spinner
+     */
+    private void updateRecyclerView(String name) {
+
+        mCurrUserData = generateCategoryArrayList(name);
+
+        mRVAdapter.updateArrayList(mCurrUserData);
+        mRVAdapter.notifyDataSetChanged();
+    }
+
+    private void easterEggs(String selectedItem) {
+
+        if(selectedItem.equals("Ash")) {
+            Toast.makeText(getActivity(), "GOTTA CATCH EM ALL", Toast.LENGTH_LONG).show();
+        }
     }
 
 }

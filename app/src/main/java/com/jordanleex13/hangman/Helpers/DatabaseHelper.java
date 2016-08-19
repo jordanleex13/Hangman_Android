@@ -1,6 +1,7 @@
 package com.jordanleex13.hangman.Helpers;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -74,5 +75,25 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         db.execSQL(upgradeQuery1);
         db.execSQL(upgradeQuery2);
+    }
+
+
+    public int getUserIdFromName(String name) {
+
+        if (name == null) {
+            return 0;
+        }
+
+        Cursor tempCursor = getReadableDatabase().rawQuery(
+                "SELECT _id FROM users WHERE name = ?", new String[]{name}
+        );
+
+        tempCursor.moveToFirst();
+
+        int userId = tempCursor.getInt(0);
+
+        tempCursor.close();
+
+        return userId;
     }
 }

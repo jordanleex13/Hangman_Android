@@ -9,9 +9,13 @@ import android.view.MenuItem;
 
 import com.jordanleex13.hangman.Helpers.FragmentHelper;
 
+import java.util.ArrayList;
+
 public class ActivityOnePlayer extends AppCompatActivity {
 
     private static final String TAG = ActivityOnePlayer.class.getSimpleName();
+
+    public static ArrayList<String> mUsers = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +66,7 @@ public class ActivityOnePlayer extends AppCompatActivity {
         } else if (fragTag.equals(FragmentUserStats.TAG)) {
             super.onBackPressed();
         } else {
-                Log.d(TAG, "Unknown back press : " + fragTag);
+            Log.d(TAG, "Unknown back press : " + fragTag);
         }
 
     }
