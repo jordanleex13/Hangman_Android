@@ -1,4 +1,4 @@
-package com.jordanleex13.hangman;
+package com.jordanleex13.hangman.Helpers;
 
 import android.content.Context;
 import android.content.SharedPreferences;

@@ -25,7 +25,7 @@ import android.widget.TextView;
 import com.jordanleex13.hangman.Helpers.BitmapHelper;
 import com.jordanleex13.hangman.Helpers.FileHelper;
 import com.jordanleex13.hangman.Helpers.FragmentHelper;
-import com.jordanleex13.hangman.Helpers.RunnableSaveData;
+import com.jordanleex13.hangman.Threads.RunnableSaveData;
 
 import junit.framework.Assert;
 

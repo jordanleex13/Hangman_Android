@@ -1,9 +1,11 @@
-package com.jordanleex13.hangman.Helpers;
+package com.jordanleex13.hangman.Threads;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.util.Log;
+
+import com.jordanleex13.hangman.Helpers.DatabaseHelper;
 
 /**
  * Runnable that saves post-game data to the database for a specific user

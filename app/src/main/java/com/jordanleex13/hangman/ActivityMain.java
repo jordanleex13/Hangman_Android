@@ -9,7 +9,7 @@ import android.view.MenuItem;
 import com.jordanleex13.hangman.Helpers.BitmapHelper;
 import com.jordanleex13.hangman.Helpers.FileHelper;
 import com.jordanleex13.hangman.Helpers.FragmentHelper;
-import com.jordanleex13.hangman.Helpers.RunnableCacheBitmap;
+import com.jordanleex13.hangman.Threads.RunnableCacheBitmap;
 
 public class ActivityMain extends AppCompatActivity {
 

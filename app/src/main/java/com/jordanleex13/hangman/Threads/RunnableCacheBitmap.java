@@ -1,4 +1,4 @@
-package com.jordanleex13.hangman.Helpers;
+package com.jordanleex13.hangman.Threads;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -7,6 +7,8 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.Log;
+
+import com.jordanleex13.hangman.Helpers.BitmapHelper;
 
 /**
  * Runnable that changes the background colour of an image and caches that single bitmap inside the BitmapHelper LruCache
@@ -25,7 +27,6 @@ public class RunnableCacheBitmap implements Runnable {
      * @param cacheKey  the key which will be used in accessing the cache. Corresponds with the stage number
      */
     public RunnableCacheBitmap(Context c, int resId, String cacheKey) {
-        Log.e(TAG, "CONSTRUCTOR");
         mContext = c;
         mId = resId;
         mKey = cacheKey;
