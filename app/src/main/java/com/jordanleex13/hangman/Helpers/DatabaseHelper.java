@@ -52,10 +52,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * Method to be used onUpgrade to add new categories
+     * Method to be used onUpgrade to add new categories to existing users
      * Is not user specific since everyone will start off with 0 wins/losses in the new category
-     * @param db
-     * @param category
+     *
+     * REMEMBER TO update insertToUserStatsTable in FragmentUserCreation so new users are created with
+     * the new categories as well
+     *
+     * @param db        the writeable database
+     * @param category  the new category which will be inserted into userStats
      */
     private void insertNewCategoryColumns(SQLiteDatabase db, String category) {
 

@@ -6,8 +6,10 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -125,7 +127,7 @@ public class FragmentOnePlayerGamePlay extends Fragment implements View.OnClickL
             // Add to list of TextViews to be accessed later
             mListOfLetters.add(underscore);
 
-            Log.d(TAG, String.valueOf(mCharArray[j]));
+            if (BuildConfig.DEBUG) Log.d(TAG, String.valueOf(mCharArray[j]));
 
             char currentChar = mCharArray[j];
             if (currentChar >= 'A' && currentChar <= 'Z') {
@@ -163,8 +165,12 @@ public class FragmentOnePlayerGamePlay extends Fragment implements View.OnClickL
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Gameplay");
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setHomeButtonEnabled(false);
+
+        super.onActivityCreated(savedInstanceState);
     }
 
     @Override
@@ -222,9 +228,8 @@ public class FragmentOnePlayerGamePlay extends Fragment implements View.OnClickL
      */
     private void setGridListeners() {
 
+        // Should be 26
         final int size = mAlphabetGrid.getChildCount();
-
-        Log.e(TAG, "size of grid layout : " + String.valueOf(size));
 
         for (int i = 0; i < size; ++i ) {
             TextView temp = (TextView) mAlphabetGrid.getChildAt(i);

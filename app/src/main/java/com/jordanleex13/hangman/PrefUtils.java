@@ -4,9 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-/**
- * Created by Jordan on 16-07-04.
- */
+
 public class PrefUtils {
 
     public static final String PLAYER_ONE_NAME = "playerOneName";

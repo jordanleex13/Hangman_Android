@@ -139,11 +139,13 @@ public class FragmentUserCreation extends DialogFragment implements View.OnClick
 
         mDatabaseHelper.getWritableDatabase().insert("users", null, args);
     }
+
     private void insertToUserStatsTable() {
 
         Cursor cursor = mDatabaseHelper.getReadableDatabase().rawQuery("SELECT MAX(_id) FROM users", null);
         cursor.moveToFirst();
         int newUserId = cursor.getInt(0);
+        cursor.close();
 
         ContentValues args = new ContentValues();
         args.put("userId", newUserId);

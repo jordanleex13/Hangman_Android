@@ -7,6 +7,7 @@
 
     <ImageView
         android:id="@+id/fragment_one_player_game_play_hangman_image"
+        android:contentDescription="Hangman image that changes everytime user guesses incorrectly"
         android:layout_centerHorizontal="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />

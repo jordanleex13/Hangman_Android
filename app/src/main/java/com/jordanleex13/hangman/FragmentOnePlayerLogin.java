@@ -3,7 +3,9 @@ package com.jordanleex13.hangman;
 
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -126,6 +128,15 @@ public class FragmentOnePlayerLogin extends Fragment implements View.OnClickList
     }
 
     @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("One Player");
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setHomeButtonEnabled(true);
+
+        super.onActivityCreated(savedInstanceState);
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
 
@@ -164,6 +175,12 @@ public class FragmentOnePlayerLogin extends Fragment implements View.OnClickList
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
+            case android.R.id.home:
+
+                Log.d(TAG, "Home button handled by activity");
+
+                break;
+
             case R.id.menu_create_user:
 
                 openCreateUserDialog();
@@ -179,7 +196,6 @@ public class FragmentOnePlayerLogin extends Fragment implements View.OnClickList
                             false, true, TAG, FragmentUserStats.TAG);
                 }
 
-
                 break;
 
             default:
@@ -189,6 +205,7 @@ public class FragmentOnePlayerLogin extends Fragment implements View.OnClickList
 
         return true;
     }
+
     @Override
     public void onClick(View v) {
         int id = v.getId();
@@ -231,7 +248,7 @@ public class FragmentOnePlayerLogin extends Fragment implements View.OnClickList
 
             mUserId = cursor.getInt(0);
             Log.e(TAG, "User name : " + name + "\tUser ID : " + String.valueOf(mUserId));
-
+            cursor.close();
             return true;
 
         }

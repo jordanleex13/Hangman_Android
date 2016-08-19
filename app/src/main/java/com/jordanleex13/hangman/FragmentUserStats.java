@@ -3,7 +3,9 @@ package com.jordanleex13.hangman;
 
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -93,6 +95,12 @@ public class FragmentUserStats extends Fragment implements AdapterView.OnItemSel
     }
 
     @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("User Statistics");
+        super.onActivityCreated(savedInstanceState);
+    }
+
+    @Override
     public void onDestroy() {
         mDatabaseHelper.close();
         super.onDestroy();
@@ -164,4 +172,5 @@ public class FragmentUserStats extends Fragment implements AdapterView.OnItemSel
         }
         return arrayList;
     }
+
 }
