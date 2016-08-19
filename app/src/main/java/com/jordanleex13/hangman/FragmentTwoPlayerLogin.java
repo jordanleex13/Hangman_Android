@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 
 public class FragmentTwoPlayerLogin extends Fragment {
 
+    public static final String TAG = FragmentTwoPlayerLogin.class.getSimpleName();
+
     public static FragmentTwoPlayerLogin newInstance() {
         FragmentTwoPlayerLogin fragment = new FragmentTwoPlayerLogin();
         Bundle args = new Bundle();
