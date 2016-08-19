@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 
 public class FragmentTwoPlayerLogin extends Fragment {
 
-    public static FragmentTwoPlayerLogin newInstance(String param1, String param2) {
+    public static FragmentTwoPlayerLogin newInstance() {
         FragmentTwoPlayerLogin fragment = new FragmentTwoPlayerLogin();
         Bundle args = new Bundle();
 
@@ -28,7 +28,9 @@ public class FragmentTwoPlayerLogin extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_two_player_login, container, false);
+        View v = inflater.inflate(R.layout.fragment_two_player_login, container, false);
+
+        return v;
     }
 
 }

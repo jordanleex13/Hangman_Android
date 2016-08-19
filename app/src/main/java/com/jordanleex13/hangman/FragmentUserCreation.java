@@ -20,22 +20,18 @@ public class FragmentUserCreation extends DialogFragment implements View.OnClick
 
     public static final String TAG = FragmentUserCreation.class.getSimpleName();
 
+    // UI
     private EditText mPlayerName;
     private EditText mPlayerAge;
     private Button mFinishButton;
 
+    // Interface
     private OnUserCreatedListener mListener;
 
     private DatabaseHelper mDatabaseHelper;
 
     public static FragmentUserCreation newInstance() {
-
-        FragmentUserCreation fragment = new FragmentUserCreation();
-
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-
-        return fragment;
+        return new FragmentUserCreation();
     }
 
     @Override
@@ -62,11 +58,42 @@ public class FragmentUserCreation extends DialogFragment implements View.OnClick
 
     @Override
     public void onDestroy() {
-        mDatabaseHelper.close();
         super.onDestroy();
+        mDatabaseHelper.close();
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.fragment_user_creation_finish_button:
+
+                if (validationCheck()) {
+
+                    insertToUserTable();
+                    insertToUserStatsTable();
+
+                    mDatabaseHelper.close();
+
+                    if (mListener != null) {
+                        mListener.newUserCreated();
+                    } else {
+                        Log.e(TAG, "listener was null");
+                    }
+
+                    dismiss();
+                }
+                break;
+
+        }
+    }
+
+
+    /**
+     * Checks to see if all the fields are filled out correctly
+     * @return  true if everything is okay, else returns false
+     */
     private boolean validationCheck() {
+
         boolean readyToStart = true;
 
         String name = mPlayerName.getText().toString();
@@ -97,40 +124,13 @@ public class FragmentUserCreation extends DialogFragment implements View.OnClick
                 }
 
             } while (cursor.moveToNext());
+
             cursor.close();
         }
-
-
 
         return readyToStart;
     }
 
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.fragment_user_creation_finish_button:
-
-                if (validationCheck()) {
-
-                    insertToUserTable();
-
-                    insertToUserStatsTable();
-
-                    mDatabaseHelper.close();
-
-                    if (mListener != null) {
-                        mListener.newUserCreated();
-                    } else {
-                        Log.e(TAG, "listener was null");
-                    }
-
-                    dismiss();
-                }
-                break;
-
-        }
-    }
 
     private void insertToUserTable() {
         ContentValues args = new ContentValues();
@@ -139,6 +139,7 @@ public class FragmentUserCreation extends DialogFragment implements View.OnClick
 
         mDatabaseHelper.getWritableDatabase().insert("users", null, args);
     }
+
 
     private void insertToUserStatsTable() {
 
@@ -167,6 +168,7 @@ public class FragmentUserCreation extends DialogFragment implements View.OnClick
         mDatabaseHelper.getWritableDatabase().insert("userStats", null, args);
 
     }
+
 
     public interface OnUserCreatedListener {
         void newUserCreated();

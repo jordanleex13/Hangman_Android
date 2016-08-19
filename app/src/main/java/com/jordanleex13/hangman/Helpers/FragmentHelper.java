@@ -1,14 +1,21 @@
 package com.jordanleex13.hangman.Helpers;
 
+import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 
 /**
  * Helper to assist in fragment transitions
  */
 public class FragmentHelper {
 
+    public static void setUpActionBar(Context c, boolean enabled, String title) {
+        ((AppCompatActivity)c).getSupportActionBar().setTitle(title);
+        ((AppCompatActivity)c).getSupportActionBar().setDisplayHomeAsUpEnabled(enabled);
+        ((AppCompatActivity)c).getSupportActionBar().setHomeButtonEnabled(enabled);
+    }
     // utility method to facilitate fragment transactions (without custom animations)
     public static void swapFragments(FragmentManager manager, int placeholder,
                                      Fragment newFragment, boolean add, boolean addToBackStack,

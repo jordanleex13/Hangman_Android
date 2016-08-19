@@ -78,16 +78,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
 
+    /**
+     * Utility method that returns the userId associated with a username
+     * @param name      the username
+     * @return          the userId, returns 0 if unable to find anything
+     */
     public int getUserIdFromName(String name) {
 
+        // Sanity check
         if (name == null) {
             return 0;
         }
 
         Cursor tempCursor = getReadableDatabase().rawQuery(
-                "SELECT _id FROM users WHERE name = ?", new String[]{name}
-        );
-
+                "SELECT _id FROM users WHERE name = ?", new String[]{name});
         tempCursor.moveToFirst();
 
         int userId = tempCursor.getInt(0);

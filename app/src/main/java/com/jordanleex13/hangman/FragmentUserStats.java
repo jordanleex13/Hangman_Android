@@ -5,7 +5,6 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,6 +21,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.jordanleex13.hangman.Helpers.DatabaseHelper;
+import com.jordanleex13.hangman.Helpers.FragmentHelper;
 import com.jordanleex13.hangman.Models.CategoryData;
 
 import java.util.ArrayList;
@@ -34,10 +34,12 @@ public class FragmentUserStats extends Fragment implements AdapterView.OnItemSel
 
     public static final String TAG = FragmentUserStats.class.getSimpleName();
 
+    // UI
     private Spinner mSpinner;
-    private ArrayAdapter<String> mSpinnerAdapter;
-
     private RecyclerView mRecyclerView;
+
+    // Adapters
+    private ArrayAdapter<String> mSpinnerAdapter;
     private RVAdapterUserStats mRVAdapter;
 
     private String mCurrName;
@@ -57,7 +59,6 @@ public class FragmentUserStats extends Fragment implements AdapterView.OnItemSel
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setHasOptionsMenu(true);
 
         mDatabaseHelper = new DatabaseHelper(getActivity());
@@ -81,17 +82,15 @@ public class FragmentUserStats extends Fragment implements AdapterView.OnItemSel
         mSpinner.setOnItemSelectedListener(this);
 
         // The spinner is 0 based, like an arraylist which is why this works
+        // This loads a call to onItemSelected where the recycler view will be populated
         mSpinner.setSelection(ActivityOnePlayer.mUsers.indexOf(mCurrName));
 
         mRecyclerView = (RecyclerView) v.findViewById(R.id.fragment_user_stats_recycler);
         mRecyclerView.setHasFixedSize(true);
-
-        // use a linear layout manager
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
         mRVAdapter = new RVAdapterUserStats(mCurrUserData);
-
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setAdapter(mRVAdapter);
 
         return v;
@@ -99,16 +98,14 @@ public class FragmentUserStats extends Fragment implements AdapterView.OnItemSel
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("User Statistics");
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setHomeButtonEnabled(true);
         super.onActivityCreated(savedInstanceState);
+        FragmentHelper.setUpActionBar(getActivity(), true, "User Statistics");
     }
 
     @Override
     public void onDestroy() {
-        mDatabaseHelper.close();
         super.onDestroy();
+        mDatabaseHelper.close();
     }
 
     @Override
@@ -146,10 +143,6 @@ public class FragmentUserStats extends Fragment implements AdapterView.OnItemSel
         Log.e(TAG, "Error. User should have been created before entering this page");
         returnToPrevious();
     }
-
-
-
-
 
 
     private void returnToPrevious() {
@@ -196,6 +189,7 @@ public class FragmentUserStats extends Fragment implements AdapterView.OnItemSel
         return arrayList;
     }
 
+
     /**
      * Method to delete a user's stats and a user from the database
      * @param name      name of the user to be deleted
@@ -229,6 +223,7 @@ public class FragmentUserStats extends Fragment implements AdapterView.OnItemSel
 
     }
 
+
     /**
      * Updates the recycler view with the user's stats.
      * @param name      the name of the current user listed in the spinner
@@ -240,6 +235,7 @@ public class FragmentUserStats extends Fragment implements AdapterView.OnItemSel
         mRVAdapter.updateArrayList(mCurrUserData);
         mRVAdapter.notifyDataSetChanged();
     }
+
 
     private void easterEggs(String selectedItem) {
 

@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -25,7 +24,10 @@ import android.widget.TextView;
 
 import com.jordanleex13.hangman.Helpers.BitmapHelper;
 import com.jordanleex13.hangman.Helpers.FileHelper;
+import com.jordanleex13.hangman.Helpers.FragmentHelper;
 import com.jordanleex13.hangman.Helpers.RunnableSaveData;
+
+import junit.framework.Assert;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,31 +40,33 @@ public class FragmentOnePlayerGamePlay extends Fragment implements View.OnClickL
 
     public static final String TAG = FragmentOnePlayerGamePlay.class.getSimpleName();
 
-    private static final int GRID_LAYOUT_ID = 26;
+    // UI
+    private ImageView mHangman;
+    private LinearLayout mLinearRow1;
+    private LinearLayout mLinearRow2;
+    private GridLayout mAlphabetGrid;
+    private Button mConcedeButton;
+
+    private List<TextView> mListOfLetters = new ArrayList<>();  // INCLUDES SPACES
+
+    // From arguments
+    private String mCategory;
+    private String mDifficulty;
+    private int mUserId;
+
+    // Word variables
+    private String mWord;       // Taken straight from text file as is
+    private char[] mCharArray;  // INCLUDES SPACES  IS UPPER CASE
+    private int mWordLength;    // INCLUDES SPACES
 
     private int numOfWrongGuesses = 0;
     private int numOfFoundLetters = 0;
     private int numOfNonLetters = 0;
 
-    private String mCategory;
-    private String mDifficulty;
-    private String mWord;
-    private char[] mCharArray;  // INCLUDES SPACES
-    private int mWordLength;    // INCLUDES SPACES
+    private final int GRID_LAYOUT_ID = 26;
+    private final String UNDERSCORE = "__";
+    private final String SPACE = " ";
 
-    private List<TextView> mListOfLetters = new ArrayList<>();  // INCLUDES SPACES
-
-    private LinearLayout mLinearRow1;
-    private LinearLayout mLinearRow2;
-    private static final String UNDERSCORE = "__";
-    private static final String SPACE = " ";
-
-    private int whichLayoutToPick = 1;
-    private GridLayout mAlphabetGrid;
-    private ImageView mHangman;
-    private Button mConcedeButton;
-
-    private int mUserId;
 
     public static FragmentOnePlayerGamePlay newInstance(String category, String difficulty, int id) {
         FragmentOnePlayerGamePlay fragment = new FragmentOnePlayerGamePlay();
@@ -89,7 +93,6 @@ public class FragmentOnePlayerGamePlay extends Fragment implements View.OnClickL
 
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -98,60 +101,11 @@ public class FragmentOnePlayerGamePlay extends Fragment implements View.OnClickL
 
         // Set initial image
         mHangman = (ImageView) v.findViewById(R.id.fragment_one_player_game_play_hangman_image);
-        Bitmap bm = BitmapHelper.getBitmapFromMemCache("0");
-        if (bm == null) {
-            int resId = FileHelper.getStringIdentifier(getActivity(), "stage0", "drawable");
-            mHangman.setImageResource(resId);
-        } else {
-            mHangman.setImageBitmap(bm);
+        setUpHangmanBitmap();
 
-        }
-
-        Log.d(TAG, "Word length : " + String.valueOf(mWordLength));
-
-
-        // TODO implement grid layout where each row is a new word maybe?
         mLinearRow1 = (LinearLayout) v.findViewById(R.id.fragment_one_player_game_play_linear_layout);
         mLinearRow2 = (LinearLayout) v.findViewById(R.id.fragment_one_player_game_play_linear_layout_2);
-
-        //Create a TextView for each letter
-        for(int j = 0; j < mWordLength; j++) {
-
-            // Create TextView
-            TextView underscore = new TextView(getActivity());
-            underscore.setGravity(View.TEXT_ALIGNMENT_CENTER);
-            underscore.setTextSize(getResources().getDimension(R.dimen.extra_small_text));
-            underscore.setId(j);
-            underscore.setPadding(8,0,8,0);
-
-            // Add to list of TextViews to be accessed later
-            mListOfLetters.add(underscore);
-
-            if (BuildConfig.DEBUG) Log.d(TAG, String.valueOf(mCharArray[j]));
-
-            char currentChar = mCharArray[j];
-            if (currentChar >= 'A' && currentChar <= 'Z') {
-                underscore.setText(UNDERSCORE);
-
-            } else if (mCharArray[j] == ' ') {
-                Log.e(TAG, "SPACE");
-                underscore.setText(SPACE);
-                ++numOfNonLetters;
-                whichLayoutToPick = 2;
-
-            } else {
-                underscore.setText(Character.toString(currentChar));
-                ++numOfNonLetters;
-            }
-
-            // Determine which row to set the letter in
-            if (whichLayoutToPick == 1) {
-                mLinearRow1.addView(underscore);
-
-            } else if (whichLayoutToPick == 2) {
-                mLinearRow2.addView(underscore);
-            }
-        }
+        setUpWordUI();
 
         // Set up alphabet and listeners
         mAlphabetGrid = (GridLayout) v.findViewById(R.id.fragment_one_player_game_play_alphabet);
@@ -166,11 +120,8 @@ public class FragmentOnePlayerGamePlay extends Fragment implements View.OnClickL
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Gameplay");
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setHomeButtonEnabled(false);
-
         super.onActivityCreated(savedInstanceState);
+        FragmentHelper.setUpActionBar(getActivity(), false, "Gameplay");
     }
 
     @Override
@@ -195,9 +146,6 @@ public class FragmentOnePlayerGamePlay extends Fragment implements View.OnClickL
 
 
 
-    /*
-     * Utility functions
-     */
 
     private void returnToPrevious() {
         getActivity().getSupportFragmentManager().popBackStackImmediate();
@@ -222,6 +170,75 @@ public class FragmentOnePlayerGamePlay extends Fragment implements View.OnClickL
         }
     }
 
+
+    /**
+     * Method to dynamically set up the word UI
+     */
+    private void setUpWordUI() {
+
+        int whichLayoutToPick = 1;
+        Log.d(TAG, "Word length : " + mWordLength);
+
+        //Create a TextView for each letter
+        for(int j = 0; j < mWordLength; j++) {
+
+            // Create TextView
+            TextView underscore = new TextView(getActivity());
+            underscore.setGravity(View.TEXT_ALIGNMENT_CENTER);
+            underscore.setTextSize(getResources().getDimension(R.dimen.extra_small_text));
+            underscore.setId(j);
+            underscore.setPadding(8, 0, 8, 0);
+
+            // Add to list of TextViews to be accessed later
+            mListOfLetters.add(underscore);
+
+            if (BuildConfig.DEBUG) Log.d(TAG, String.valueOf(mCharArray[j]));
+
+            char currentChar = mCharArray[j];
+            if (currentChar >= 'A' && currentChar <= 'Z') {
+                underscore.setText(UNDERSCORE);
+
+            } else if (mCharArray[j] == ' ') {
+                Log.e(TAG, "SPACE");
+                underscore.setText(SPACE);
+                ++numOfNonLetters;
+
+                // after the first space, automatically default to the second row
+                whichLayoutToPick = 2;
+
+            } else {
+                underscore.setText(Character.toString(currentChar));
+                ++numOfNonLetters;
+            }
+
+            // Determine which row to set the letter in
+            if (whichLayoutToPick == 1) {
+                mLinearRow1.addView(underscore);
+
+            } else if (whichLayoutToPick == 2) {
+                mLinearRow2.addView(underscore);
+            }
+        }
+    }
+
+
+    /**
+     * Method to set up correct drawable, whether from the bitmap cache or just from the drawable folder
+     * Drawable number corresponds with the numOfWrongGuesses
+     */
+    private void setUpHangmanBitmap() {
+
+        Bitmap bm = BitmapHelper.getBitmapFromMemCache(String.valueOf(numOfWrongGuesses));
+        if (bm != null) {
+            mHangman.setImageBitmap(bm);
+        } else {
+            Log.e(TAG, "Error loading image from cache. Setting default drawable");
+            int resId = FileHelper.getStringIdentifier(getActivity(), "stage" + numOfWrongGuesses, "drawable");
+            mHangman.setImageResource(resId);
+        }
+    }
+
+
     @SuppressWarnings({"All"})
     /**
      * Sets up OnClickListeners for each individual letter in the alphabet grid
@@ -231,12 +248,15 @@ public class FragmentOnePlayerGamePlay extends Fragment implements View.OnClickL
         // Should be 26
         final int size = mAlphabetGrid.getChildCount();
 
+        Assert.assertTrue(size == 26);
+
         for (int i = 0; i < size; ++i ) {
             TextView temp = (TextView) mAlphabetGrid.getChildAt(i);
             temp.setId(GRID_LAYOUT_ID);
             temp.setOnClickListener(this);
         }
     }
+
 
     /**
      * Method that checks to see if the guessed letter is in the word, then updates the UI accordingly
@@ -245,6 +265,8 @@ public class FragmentOnePlayerGamePlay extends Fragment implements View.OnClickL
     private void checkGuess(View v) {
         TextView view = (TextView) v;
         Log.d(TAG, view.getText().toString());
+
+        // Disable the click listener since should not be able to click a letter more than once
         view.setOnClickListener(null);
 
         // Logic
@@ -269,8 +291,8 @@ public class FragmentOnePlayerGamePlay extends Fragment implements View.OnClickL
                 if (binary[i] == 1) {
                     TextView temp = mListOfLetters.get(i);
                     temp.setText(String.valueOf(mCharArray[i]));
-                    Log.e(TAG, temp.getText().toString());
-                    Log.e(TAG, "FOUND at : " + String.valueOf(i));
+
+                    Log.e(TAG, "FOUND letter " + view.getText().toString() + " at : " + String.valueOf(i));
                     ++numOfFoundLetters;
 
                     if (numOfFoundLetters == (mWordLength - numOfNonLetters)) {
@@ -295,18 +317,12 @@ public class FragmentOnePlayerGamePlay extends Fragment implements View.OnClickL
                     showAlertDialog("CPU Wins!");
                 }
 
-                Bitmap bm = BitmapHelper.getBitmapFromMemCache(String.valueOf(numOfWrongGuesses));
-                if (bm != null) {
-                    mHangman.setImageBitmap(bm);
-                } else {
-                    Log.e(TAG, "Error loading image from cache. Setting default drawable");
-                    int resId = FileHelper.getStringIdentifier(getActivity(), "stage" + numOfWrongGuesses, "drawable");
-                    mHangman.setImageResource(resId);
-                }
+                setUpHangmanBitmap();
             }
         }
 
     }
+
 
     /**
      * Fills in the rest of the letters red; used when the player loses
@@ -325,6 +341,11 @@ public class FragmentOnePlayerGamePlay extends Fragment implements View.OnClickL
         }
     }
 
+
+    /**
+     * Displays an alert dialog that has two options: try again or search
+     * @param title     title of the alert dialog
+     */
     private void showAlertDialog(String title) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
@@ -360,6 +381,11 @@ public class FragmentOnePlayerGamePlay extends Fragment implements View.OnClickL
         dialog.show();
     }
 
+
+    /**
+     * Spawns a new thread to save the results of the game
+     * @param win       true if user won, false if user lost
+     */
     private void saveResults(boolean win) {
         new Thread(new RunnableSaveData(getActivity(), win, mCategory, mUserId)).start();
     }

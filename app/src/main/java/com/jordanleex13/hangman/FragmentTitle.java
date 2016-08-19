@@ -19,17 +19,7 @@ public class FragmentTitle extends Fragment implements View.OnClickListener {
     //private Button twoPlayersButton;
 
     public static FragmentTitle newInstance() {
-        FragmentTitle fragment = new FragmentTitle();
-        Bundle args = new Bundle();
-
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
+        return new FragmentTitle();
     }
 
     @Override

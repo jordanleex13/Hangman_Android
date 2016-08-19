@@ -29,8 +29,6 @@ public class ActivityOnePlayer extends AppCompatActivity {
             toolBar.setTitleTextColor(getResources().getColor(R.color.white));
             setSupportActionBar(toolBar);
 
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setHomeButtonEnabled(true);
         }
 
         Fragment newFragment = FragmentOnePlayerLogin.newInstance();
@@ -39,23 +37,21 @@ public class ActivityOnePlayer extends AppCompatActivity {
 
     }
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                super.onBackPressed();
+                onBackPressed();
                 break;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * Control all back press functionality from Activity rather than individual fragments
-     */
     @Override
     public void onBackPressed() {
+
+        //Control all back press functionality from Activity rather than individual fragments
 
         String fragTag = getCurrentFragmentTag();
 

@@ -49,7 +49,7 @@ public class ActivityMain extends AppCompatActivity {
     }
 
     /**
-     * Method that spawns multiple threads which cache an image then close
+     * Method that checks if bitmap is in cache and if not, spawns thread to which cache the image
      */
     private void startCachingImages() {
 
