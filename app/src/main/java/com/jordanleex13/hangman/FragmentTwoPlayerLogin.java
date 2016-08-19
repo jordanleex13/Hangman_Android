@@ -2,10 +2,13 @@ package com.jordanleex13.hangman;
 
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.jordanleex13.hangman.Helpers.FragmentHelper;
 
 
 public class FragmentTwoPlayerLogin extends Fragment {
@@ -35,4 +38,9 @@ public class FragmentTwoPlayerLogin extends Fragment {
         return v;
     }
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        FragmentHelper.setUpActionBar(getActivity(), true, "Two Player");
+    }
 }
