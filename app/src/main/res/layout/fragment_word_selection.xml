@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="Type a Word"
+            android:text="Selected Word"
             android:textSize="@dimen/small_medium_text"
             android:fontFamily="sans-serif-light"
             />
@@ -38,6 +38,28 @@
             android:inputType="textPersonName"
             android:fontFamily="sans-serif-light" />
     </LinearLayout>
+
+
+
+    <TextView
+        android:id="@+id/fragment_word_selection_categories"
+        android:layout_below="@id/fragment_word_selection_user_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Select from a category"
+        android:textSize="@dimen/medium_text"
+        android:fontFamily="sans-serif-light"
+        android:layout_margin="@dimen/medium_margin"
+        />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/fragment_word_selection_recycler"
+        android:layout_below="@id/fragment_word_selection_categories"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </android.support.v7.widget.RecyclerView>
+
 
 
     <Button

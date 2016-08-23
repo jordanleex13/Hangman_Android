@@ -33,7 +33,7 @@ public class RVAdapterUserStats extends RecyclerView.Adapter<RVAdapterUserStats.
 
         // inflate view for a single row (viewholder)
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.rv_viewholder, parent, false);
+                .inflate(R.layout.rv_viewholder_userstats, parent, false);
         return new ViewHolder(v);
     }
 
