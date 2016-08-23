@@ -1,0 +1,55 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.jordanleex13.hangman.FragmentWordSelection">
+
+    <TextView
+        android:id="@+id/fragment_word_selection_player"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="@dimen/medium_margin"
+        android:textSize="@dimen/small_medium_text"
+        android:fontFamily="sans-serif-light" />
+
+    <LinearLayout
+        android:id="@+id/fragment_word_selection_user_input"
+        android:layout_below="@id/fragment_word_selection_player"
+        android:layout_margin="@dimen/medium_margin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Type a Word"
+            android:textSize="@dimen/medium_text"
+            android:fontFamily="sans-serif-light"
+            />
+        <EditText
+            android:id="@+id/fragment_word_selection_edittext"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:inputType="textPersonName"
+            android:fontFamily="sans-serif-light"
+            android:maxLength="13" />
+    </LinearLayout>
+
+
+    <Button
+        android:id="@+id/fragment_word_selection_button_start"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorPrimary"
+        android:textColor="@color/white"
+        android:text="Start Playing!"
+        android:textSize="@dimen/medium_text"
+        android:fontFamily="sans-serif-light"
+        style="@android:style/ButtonBar"/>
+</RelativeLayout>

@@ -1,17 +1,24 @@
 package com.jordanleex13.hangman;
 
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 
-import com.jordanleex13.hangman.Helpers.FragmentHelper;
-
+/**
+ * Activity that uses a view pager to display two fragments. A user info fragment and a word selection
+ * fragment.
+ */
 public class ActivityTwoPlayer extends AppCompatActivity {
 
     private static final String TAG = ActivityTwoPlayer.class.getSimpleName();
+
+    private ViewPager mViewPager;
+    private SectionsPagerAdapter mSectionsPagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,9 +33,13 @@ public class ActivityTwoPlayer extends AppCompatActivity {
             setSupportActionBar(toolBar);
         }
 
-        Fragment newFragment = FragmentTwoPlayerLogin.newInstance();
-        FragmentHelper.swapFragments(getSupportFragmentManager(), R.id.activity_two_player_container,
-                newFragment, true, false, null, FragmentTwoPlayerLogin.TAG);
+        // Create the adapter that will return a fragment for each of the two sections
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+
+        // Set up the ViewPager with the sections adapter.
+        mViewPager = (ViewPager) findViewById(R.id.activity_two_player_pager);
+        mViewPager.setAdapter(mSectionsPagerAdapter);
+
     }
 
     @Override
@@ -42,47 +53,65 @@ public class ActivityTwoPlayer extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onBackPressed() {
 
-        //Control all back press functionality from Activity rather than individual fragments
-
-        String fragTag = getCurrentFragmentTag();
-        Log.e(TAG, fragTag);
-//        if (fragTag.equals(FragmentOnePlayerGamePlay.TAG)) {
-//            Log.e(TAG, "Blocked back-press");
-//        } else if (fragTag.equals(FragmentOnePlayerLogin.TAG)){
-//            super.onBackPressed();
-//        } else if (fragTag.equals(FragmentUserStats.TAG)) {
-//            super.onBackPressed();
-//        } else {
-//            Log.d(TAG, "Unknown back press : " + fragTag);
-
-        super.onBackPressed();
+    /**
+     * Public method (can be used by fragments) that switches the tab
+     * @param viewPageNum
+     */
+    public void switchViewPagerTab(int viewPageNum) {
+        mViewPager.setCurrentItem(viewPageNum);
 
     }
 
-    // if a fragment is currently being rendered in the placeholder, return its tag
-    private String getCurrentFragmentTag() {
 
-        String currFragmentTag = null;
 
-        // find the fragment currently hosted in the fragment placeholder
-        Fragment currFragment = getSupportFragmentManager()
-                .findFragmentById(R.id.activity_two_player_container);
+    // Standard adapter for viewpager
+    public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
 
-        // if the fragment isn't null, return it's associated tag
-        if (currFragment != null) {
+        // Keep a reference to the fragments
+        private Fragment[] fragList;
 
-            currFragmentTag = currFragment.getTag();
-
-        } else {
-
-            // create a debug message indicating no fragment is currently hosted
-            if (BuildConfig.DEBUG) Log.d(TAG, "Current fragment is NULL");
+        public SectionsPagerAdapter(FragmentManager fm) {
+            super(fm);
+            fragList = new Fragment[2];
         }
 
-        return currFragmentTag;
+
+        @Override
+        public Fragment getItem(int position) {
+
+            // Login is the first fragment
+            if(position == 0) {
+                FragmentTwoPlayerLogin fragment = FragmentTwoPlayerLogin.newInstance();
+                fragList[position] = fragment;
+                return fragment;
+
+            // Word selection is the second
+            } else {
+                FragmentWordSelection fragment = FragmentWordSelection.newInstance();
+
+                // set the listener as the "user info" fragment
+                fragment.setUserDataInputtedListener(fragList[0]);
+
+                fragList[position] = fragment;
+                return fragment;
+            }
+
+        }
+
+        @Override
+        public int getCount() {
+            return 2;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            switch (position) {
+                case 0: return "User Info";
+                case 1: return "Word Selection";
+            }
+            return null;
+        }
     }
 }
 

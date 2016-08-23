@@ -9,6 +9,11 @@ public class PrefUtils {
 
     public static final String PLAYER_ONE_NAME = "playerOneName";
     public static final String PLAYER_TWO_NAME = "playerTwoName";
+    public static final String PLAYER_ONE_WINS = "playerOneWins";
+    public static final String PLAYER_TWO_WINS = "playerTwoWins";
+    public static final String PLAYER_ONE_LOSSES = "playerOneLosses";
+    public static final String PLAYER_TWO_LOSSES = "playerTwoLosses";
+    public static final String CURRENT_TURN = "currentTurn";        // either 1 or 2
 
     public static void setStringPreference(Context c, String key, String value) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(c);
@@ -38,13 +43,20 @@ public class PrefUtils {
         return value;
     }
 
-    public static void setDefaultPreferences(Context c) {
+    public static void setDefaultPreferences(Context c, boolean fullReset) {
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(c);
         SharedPreferences.Editor editor = prefs.edit();
 
-        editor.putString(PLAYER_ONE_NAME, null);
-        editor.putString(PLAYER_TWO_NAME, null);
+        if (fullReset) {
+            editor.putString(PLAYER_ONE_NAME, null);
+            editor.putString(PLAYER_TWO_NAME, null);
+            editor.putInt(PLAYER_ONE_WINS, 0);
+            editor.putInt(PLAYER_TWO_WINS, 0);
+            editor.putInt(PLAYER_ONE_LOSSES, 0);
+            editor.putInt(PLAYER_TWO_LOSSES, 0);
+        }
+        editor.putInt(CURRENT_TURN, 1);
 
         editor.apply();
     }

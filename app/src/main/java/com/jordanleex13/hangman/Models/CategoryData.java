@@ -27,6 +27,15 @@ public class CategoryData {
         mWinRate = calculateWinRate();
     }
 
+    public static double staticCalculateWinRate(int wins, int losses) {
+        if (wins == 0)
+            return 0d;
+        else if (losses == 0)
+            return 1d;
+        else
+            return ((double) wins) / (wins + losses);
+    }
+
     private double calculateWinRate() {
         if (mWins == 0) {
             return 0d;
