@@ -31,7 +31,9 @@
         <activity
             android:name=".ActivityTwoPlayer"
             android:screenOrientation="portrait" />
-        <activity android:name=".ActivityTwoPlayerGamePlay"></activity>
+        <activity
+            android:name=".ActivityTwoPlayerGamePlay"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

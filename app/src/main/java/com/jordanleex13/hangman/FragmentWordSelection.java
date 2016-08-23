@@ -4,6 +4,7 @@ package com.jordanleex13.hangman;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Html;
 import android.text.InputFilter;
 import android.text.Spanned;
 import android.util.Log;
@@ -69,7 +70,6 @@ public class FragmentWordSelection extends Fragment implements View.OnClickListe
                 }
         });
 
-        mEditText.setText("test word");
         mStartButton = (Button) v.findViewById(R.id.fragment_word_selection_button_start);
         mStartButton.setOnClickListener(this);
         return v;
@@ -79,9 +79,14 @@ public class FragmentWordSelection extends Fragment implements View.OnClickListe
     public void onResume() {
         super.onResume();
         mPlayerNum = PrefUtils.getIntPreference(getActivity(), PrefUtils.CURRENT_TURN);
-        mTextView.setText("User " + mPlayerNum + " please select a word");
-
-
+        int oppositeNum;
+        if (mPlayerNum == 1) {
+            oppositeNum = 2;
+        } else {
+            oppositeNum = 1;
+        }
+        mTextView.setText(Html.fromHtml("<b><i>User " + oppositeNum + "</b></i> please select a word"));
+        mEditText.setText(null);
     }
 
     @Override

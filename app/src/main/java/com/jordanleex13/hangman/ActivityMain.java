@@ -28,8 +28,7 @@ public class ActivityMain extends AppCompatActivity {
 
         startCachingImages();
 
-        // TODO eventually switch to false
-        PrefUtils.setDefaultPreferences(this, true);
+        PrefUtils.setDefaultPreferences(this, false);
     }
 
     @Override

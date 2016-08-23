@@ -63,6 +63,7 @@
         android:id="@+id/fragment_two_player_login_user1_data"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/large_margin"
         android:layout_below="@id/fragment_two_player_login_part2">
 
         <LinearLayout
@@ -186,5 +187,18 @@
             />
 
     </RelativeLayout>
+
+
+    <Button
+        android:id="@+id/fragment_two_player_login_delete_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/red"
+        android:textColor="@color/white"
+        android:text="Delete User Data"
+        android:textSize="@dimen/medium_text"
+        android:fontFamily="sans-serif-light"
+        style="@android:style/ButtonBar"/>
 
 </RelativeLayout>
