@@ -28,7 +28,11 @@ public class ActivityMain extends AppCompatActivity {
 
         startCachingImages();
 
-        PrefUtils.setDefaultPreferences(this, false);
+        // Set up default preferences if first time in app
+        if (PrefUtils.getIntPreference(this, PrefUtils.PLAYER_ONE_WINS) == -1) {
+            Log.e(TAG, "First time in app. Reset default pref");
+            PrefUtils.setDefaultPreferences(this);
+        }
     }
 
     @Override
@@ -49,6 +53,7 @@ public class ActivityMain extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
 
     /**
      * Method that checks if bitmap is in cache and if not, spawns thread to which cache the image

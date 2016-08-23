@@ -32,6 +32,10 @@ import junit.framework.Assert;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Fragment where user tries to guess the hidden word. User has 8 tries to guess correctly. UI elements
+ * are updated accordingly after a user guess
+ */
 public class FragmentTwoPlayerGamePlay extends Fragment implements View.OnClickListener{
 
     public static final String TAG = FragmentTwoPlayerGamePlay.class.getSimpleName();
@@ -151,6 +155,7 @@ public class FragmentTwoPlayerGamePlay extends Fragment implements View.OnClickL
         getActivity().finish();
     }
 
+
     /**
      * Method to dynamically set up the word UI
      */
@@ -201,6 +206,7 @@ public class FragmentTwoPlayerGamePlay extends Fragment implements View.OnClickL
         }
     }
 
+
     /**
      * Method to set up correct drawable, whether from the bitmap cache or just from the drawable folder
      * Drawable number corresponds with the numOfWrongGuesses
@@ -216,6 +222,7 @@ public class FragmentTwoPlayerGamePlay extends Fragment implements View.OnClickL
             mHangman.setImageResource(resId);
         }
     }
+
 
     @SuppressWarnings({"All"})
     /**
@@ -319,6 +326,7 @@ public class FragmentTwoPlayerGamePlay extends Fragment implements View.OnClickL
         }
     }
 
+
     /**
      * Displays an alert dialog that has two options: try again or search
      * @param title     title of the alert dialog
@@ -358,9 +366,10 @@ public class FragmentTwoPlayerGamePlay extends Fragment implements View.OnClickL
         dialog.show();
     }
 
+
     /**
      * Method to save the results of the game to Shared Preferences
-     * @param win
+     * @param win       true if the user won, else false
      */
     private void saveResults(boolean win) {
 

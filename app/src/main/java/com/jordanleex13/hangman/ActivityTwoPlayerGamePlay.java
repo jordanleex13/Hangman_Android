@@ -16,7 +16,7 @@ public class ActivityTwoPlayerGamePlay extends AppCompatActivity {
         Toolbar toolBar = (Toolbar) findViewById(R.id.activity_two_player_gameplay_toolbar);
 
         if (toolBar != null) {
-            toolBar.setTitle("Gameplay");
+            //toolBar.setTitle("Gameplay");
             toolBar.setTitleTextColor(getResources().getColor(R.color.white));
             setSupportActionBar(toolBar);
 
@@ -33,11 +33,11 @@ public class ActivityTwoPlayerGamePlay extends AppCompatActivity {
                     newFragment, true, false, null, FragmentTwoPlayerGamePlay.TAG);
         }
 
-
     }
 
     @Override
     public void onBackPressed() {
+        // Disable backpress
         //super.onBackPressed();
 
     }

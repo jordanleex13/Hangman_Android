@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-
+/**
+ * Fully static class to read and write data from shared preferences
+ */
 public class PrefUtils {
 
     public static final String PLAYER_ONE_NAME = "playerOneName";
@@ -43,19 +45,17 @@ public class PrefUtils {
         return value;
     }
 
-    public static void setDefaultPreferences(Context c, boolean fullReset) {
+    public static void setDefaultPreferences(Context c) {
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(c);
         SharedPreferences.Editor editor = prefs.edit();
 
-        if (fullReset) {
-            editor.putString(PLAYER_ONE_NAME, null);
-            editor.putString(PLAYER_TWO_NAME, null);
-            editor.putInt(PLAYER_ONE_WINS, 0);
-            editor.putInt(PLAYER_TWO_WINS, 0);
-            editor.putInt(PLAYER_ONE_LOSSES, 0);
-            editor.putInt(PLAYER_TWO_LOSSES, 0);
-        }
+        editor.putString(PLAYER_ONE_NAME, null);
+        editor.putString(PLAYER_TWO_NAME, null);
+        editor.putInt(PLAYER_ONE_WINS, 0);
+        editor.putInt(PLAYER_TWO_WINS, 0);
+        editor.putInt(PLAYER_ONE_LOSSES, 0);
+        editor.putInt(PLAYER_TWO_LOSSES, 0);
         editor.putInt(CURRENT_TURN, 1);
 
         editor.apply();

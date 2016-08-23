@@ -17,7 +17,9 @@ import android.widget.TextView;
 
 import com.jordanleex13.hangman.Helpers.PrefUtils;
 
-
+/**
+ * Fragment where a user enters a word for another user
+ */
 public class FragmentWordSelection extends Fragment implements View.OnClickListener {
 
     public static final String TAG = FragmentWordSelection.class.getSimpleName();
@@ -30,6 +32,9 @@ public class FragmentWordSelection extends Fragment implements View.OnClickListe
 
     private int mPlayerNum;
 
+    private final int MAX_WORD_LENGTH = 12;
+
+
     public static FragmentWordSelection newInstance() {
         FragmentWordSelection fragment = new FragmentWordSelection();
         Bundle args = new Bundle();
@@ -41,7 +46,6 @@ public class FragmentWordSelection extends Fragment implements View.OnClickListe
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.e(TAG, "onCreate");
     }
 
     @Override
@@ -50,34 +54,22 @@ public class FragmentWordSelection extends Fragment implements View.OnClickListe
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_word_selection, container, false);
 
-        Log.e(TAG, "onCreateVIEW");
-
         mTextView = (TextView) v.findViewById(R.id.fragment_word_selection_player);
 
         mEditText = (EditText) v.findViewById(R.id.fragment_word_selection_edittext);
-        mEditText.setFilters(new InputFilter[] {
-                new InputFilter() {
-                    @Override
-                    public CharSequence filter(CharSequence src, int start, int end, Spanned dest, int dstart, int dend) {
-                        if(src.equals("")){ // for backspace
-                            return src;
-                        }
-                        if(src.toString().matches("[a-zA-Z ]+")){
-                            return src;
-                        }
-                        return "";
-                    }
-                }
-        });
+        mEditText.setFilters(createInputFilters());
 
         mStartButton = (Button) v.findViewById(R.id.fragment_word_selection_button_start);
         mStartButton.setOnClickListener(this);
+
         return v;
     }
 
     @Override
     public void onResume() {
         super.onResume();
+
+        // Set who should pick the word. Opposite of who is playing
         mPlayerNum = PrefUtils.getIntPreference(getActivity(), PrefUtils.CURRENT_TURN);
         int oppositeNum;
         if (mPlayerNum == 1) {
@@ -99,12 +91,18 @@ public class FragmentWordSelection extends Fragment implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.fragment_word_selection_button_start:
+
+                // Check FragmentTwoPlayerLogin if usernames are valid
                 if (mListener.usernamesAreValid()) {
+
+                    // Check if word is filled
                     String word = mEditText.getText().toString();
+
                     if (word.isEmpty()) {
                         mEditText.setError("Please enter a word");
+
                     } else {
-                        Log.e(TAG, "START game");
+                        Log.e(TAG, "Fields valid. Starting game");
                         Intent twoPlayerIntent = new Intent(getActivity(), ActivityTwoPlayerGamePlay.class);
                         twoPlayerIntent.putExtra("word", word);
                         twoPlayerIntent.putExtra("playerNum", mPlayerNum);
@@ -119,9 +117,37 @@ public class FragmentWordSelection extends Fragment implements View.OnClickListe
     }
 
 
+    /**
+     * Private method to create input filters for edit text
+     * @return      input filter array
+     */
+    private InputFilter[] createInputFilters() {
+
+        InputFilter[] filterArray = new InputFilter[2];
+
+        filterArray[0] = new InputFilter.LengthFilter(MAX_WORD_LENGTH);
+        filterArray[1] = new InputFilter() {
+            @Override
+            public CharSequence filter(CharSequence src, int start, int end, Spanned dest, int dstart, int dend) {
+                if(src.equals("")){ // for backspace
+                    return src;
+                }
+                if(src.toString().matches("[a-zA-Z ]+")){
+                    return src;
+                }
+                return "";
+            }
+        };
+
+        return filterArray;
+    }
+
+
+    // Interface to communicate with other fragment in view pager
     public interface UserDataInputted {
         boolean usernamesAreValid();
     }
+
     public void setUserDataInputtedListener(Fragment fragment) {
         mListener = (UserDataInputted) fragment;
     }

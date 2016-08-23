@@ -17,8 +17,7 @@ import com.jordanleex13.hangman.Helpers.PrefUtils;
 import com.jordanleex13.hangman.Models.CategoryData;
 
 /**
- * Fragment where the two players input their names
- * TODO display user win rates against each other and a clear button to erase "current session" history
+ * Fragment where two player data is displayed; names can be changed and data reset in this fragment
  */
 public class FragmentTwoPlayerLogin extends Fragment implements View.OnClickListener,
         FragmentWordSelection.UserDataInputted {
@@ -61,7 +60,6 @@ public class FragmentTwoPlayerLogin extends Fragment implements View.OnClickList
         user1Rate = (TextView) v.findViewById(R.id.fragment_two_player_login_user1_winrate);
         user2Rate = (TextView) v.findViewById(R.id.fragment_two_player_login_user2_winrate);
 
-
         deleteButton = (Button) v.findViewById(R.id.fragment_two_player_login_delete_button);
         deleteButton.setOnClickListener(this);
 
@@ -78,21 +76,24 @@ public class FragmentTwoPlayerLogin extends Fragment implements View.OnClickList
     public void onResume() {
         super.onResume();
         updateUserDataUI();
-
     }
-
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.fragment_two_player_login_delete_button:
-                PrefUtils.setDefaultPreferences(getActivity(), true);
+                PrefUtils.setDefaultPreferences(getActivity());
                 Toast.makeText(getActivity(), "All user data deleted", Toast.LENGTH_SHORT).show();
                 updateUserDataUI();
                 break;
         }
     }
 
+
+    /**
+     * Method to check that all fields are filled out (usernames)
+     * @return  True if everything is valid, false otherwise
+     */
     private boolean validationCheck() {
 
         boolean readyToStart = true;
@@ -118,6 +119,10 @@ public class FragmentTwoPlayerLogin extends Fragment implements View.OnClickList
         return readyToStart;
     }
 
+
+    /**
+     * Updates the user data from shared preferences
+     */
     private void updateUserDataUI() {
 
         user1.setText(PrefUtils.getStringPreference(getActivity(), PrefUtils.PLAYER_ONE_NAME));
@@ -136,6 +141,7 @@ public class FragmentTwoPlayerLogin extends Fragment implements View.OnClickList
         user1Rate.setText("Win Rate : " + CategoryData.staticCalculateWinRate(p1wins, p1losses));
         user2Rate.setText("Win Rate : " + CategoryData.staticCalculateWinRate(p2wins, p2losses));
     }
+
 
     /**
      * Callback returned to FragmentWordSelection. Switches tabs if not everything is correctly filled out
