@@ -33,7 +33,7 @@ public class RVAdapterUserStats extends RecyclerView.Adapter<RVAdapterUserStats.
 
         // inflate view for a single row (viewholder)
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.rv_viewholder, parent, false);
+                .inflate(R.layout.rv_viewholder_userstats, parent, false);
         return new ViewHolder(v);
     }
 
@@ -49,8 +49,8 @@ public class RVAdapterUserStats extends RecyclerView.Adapter<RVAdapterUserStats.
         int wins = curr.getWins();
         int losses = curr.getLosses();
 
-        DecimalFormat df = new DecimalFormat("#.##");   // max 2 decimal places
-        String winRate = df.format(curr.getWinRate());
+        DecimalFormat df = new DecimalFormat("##.#");   // max 2 decimal places
+        String winRate = df.format(curr.getWinRate()*100) + "%";
 
 
         viewholder.mCategory.setText(category);

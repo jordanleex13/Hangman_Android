@@ -16,7 +16,7 @@ public class FragmentTitle extends Fragment implements View.OnClickListener {
 
     // UI elements
     private Button onePlayerButton;
-    //private Button twoPlayersButton;
+    private Button twoPlayersButton;
 
     public static FragmentTitle newInstance() {
         return new FragmentTitle();
@@ -29,10 +29,10 @@ public class FragmentTitle extends Fragment implements View.OnClickListener {
         View v =  inflater.inflate(R.layout.fragment_title, container, false);
 
         onePlayerButton = (Button) v.findViewById(R.id.fragment_title_button_one_player);
-        //twoPlayersButton = (Button) v.findViewById(R.id.fragment_title_button_two_players);
+        twoPlayersButton = (Button) v.findViewById(R.id.fragment_title_button_two_players);
 
         onePlayerButton.setOnClickListener(this);
-        //twoPlayersButton.setOnClickListener(this);
+        twoPlayersButton.setOnClickListener(this);
 
         return v;
     }
@@ -47,12 +47,12 @@ public class FragmentTitle extends Fragment implements View.OnClickListener {
 
                 break;
 
-//            case R.id.fragment_title_button_two_players:
-//
-//                Intent twoPlayerIntent = new Intent(getActivity(), ActivityTwoPlayer.class);
-//                getActivity().startActivity(twoPlayerIntent);
-//
-//                break;
+            case R.id.fragment_title_button_two_players:
+
+                Intent twoPlayerIntent = new Intent(getActivity(), ActivityTwoPlayer.class);
+                getActivity().startActivity(twoPlayerIntent);
+
+                break;
 
             default:
                 Log.e(TAG, "Unknown click registered " + v.getId());
