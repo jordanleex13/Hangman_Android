@@ -3,8 +3,6 @@ package com.jordanleex13.hangman;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 
 import com.jordanleex13.hangman.Helpers.BitmapHelper;
 import com.jordanleex13.hangman.Helpers.FileHelper;
@@ -34,26 +32,6 @@ public class ActivityMain extends AppCompatActivity {
             PrefUtils.setDefaultPreferences(this);
         }
     }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()) {
-            case R.id.menu_settings:
-                Log.d(TAG, "Settings pressed");
-                break;
-
-            default:
-                return false;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
 
     /**
      * Method that checks if bitmap is in cache and if not, spawns thread to which cache the image

@@ -16,6 +16,8 @@ import com.jordanleex13.hangman.Helpers.FragmentHelper;
 import com.jordanleex13.hangman.Helpers.PrefUtils;
 import com.jordanleex13.hangman.Models.CategoryData;
 
+import java.text.DecimalFormat;
+
 /**
  * Fragment where two player data is displayed; names can be changed and data reset in this fragment
  */
@@ -138,8 +140,11 @@ public class FragmentTwoPlayerLogin extends Fragment implements View.OnClickList
         user1Losses.setText("Losses : " + p1losses);
         user2Losses.setText("Losses : " + p2losses);
 
-        user1Rate.setText("Win Rate : " + CategoryData.staticCalculateWinRate(p1wins, p1losses));
-        user2Rate.setText("Win Rate : " + CategoryData.staticCalculateWinRate(p2wins, p2losses));
+        DecimalFormat df = new DecimalFormat("##.#");   // max 2 decimal places
+        String temp1 = df.format(CategoryData.staticCalculateWinRate(p1wins, p1losses)*100) + "%";
+        String temp2 = df.format(CategoryData.staticCalculateWinRate(p2wins, p2losses)*100) + "%:";
+        user1Rate.setText("Win Rate : " + temp1);
+        user2Rate.setText("Win Rate : " + temp2);
     }
 
 
