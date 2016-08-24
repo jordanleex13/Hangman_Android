@@ -43,12 +43,7 @@ public class FragmentOnePlayerLogin extends Fragment implements View.OnClickList
 
     // UI elements
     private Spinner mUsernameSpinner;
-    private CheckBox animals;
-    private CheckBox science;
-    private CheckBox sports;
-    private CheckBox people;
-    private CheckBox landmarks;
-    private CheckBox pokemon;
+    private CheckBox animals, science, sports, people, landmarks, pokemon, countries;
     private RadioGroup cpuDifficulty;
     private RadioButton selectedCpuDifficulty;      // set to medium by default
     private Button startButton;
@@ -104,6 +99,7 @@ public class FragmentOnePlayerLogin extends Fragment implements View.OnClickList
         people = (CheckBox) v.findViewById(R.id.fragment_one_player_login_category_people);
         landmarks = (CheckBox) v.findViewById(R.id.fragment_one_player_login_category_landmarks);
         pokemon = (CheckBox) v.findViewById(R.id.fragment_one_player_login_category_pokemon);
+        countries = (CheckBox) v.findViewById(R.id.fragment_one_player_login_category_countries);
 
         // Set listeners
         animals.setOnCheckedChangeListener(this);
@@ -112,6 +108,7 @@ public class FragmentOnePlayerLogin extends Fragment implements View.OnClickList
         people.setOnCheckedChangeListener(this);
         landmarks.setOnCheckedChangeListener(this);
         pokemon.setOnCheckedChangeListener(this);
+        countries.setOnCheckedChangeListener(this);
 
         startButton.setOnClickListener(this);
 
@@ -139,6 +136,7 @@ public class FragmentOnePlayerLogin extends Fragment implements View.OnClickList
         checkedHashMap.put("people", people.isChecked());
         checkedHashMap.put("landmarks", landmarks.isChecked());
         checkedHashMap.put("pokemon", pokemon.isChecked());
+        checkedHashMap.put("countries", countries.isChecked());
 
     }
 

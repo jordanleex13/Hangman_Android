@@ -164,6 +164,8 @@ public class FragmentUserCreation extends DialogFragment implements View.OnClick
         args.put("landmarksLosses", 0);
         args.put("pokemonWins", 0);
         args.put("pokemonLosses", 0);
+        args.put("countriesWins", 0);
+        args.put("countriesLosses", 0);
 
         mDatabaseHelper.getWritableDatabase().insert("userStats", null, args);
 

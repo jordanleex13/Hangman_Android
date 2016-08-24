@@ -4,12 +4,13 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "Hangman";
-    public static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 2;
 
 
     public DatabaseHelper(Context context) {
@@ -42,6 +43,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + "landmarksLosses INTEGER NOT NULL, "
                 + "pokemonWins INTEGER NOT NULL, "
                 + "pokemonLosses INTEGER NOT NULL, "
+                + "countriesWins INTEGER NOT NULL, "
+                + "countriesLosses INTEGER NOT NULL, "
                 + "FOREIGN KEY(userId) REFERENCES users(_id)"
                 + ");");
 
@@ -49,7 +52,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+        if (oldVersion == 1 && newVersion == 2) {
+            Log.e("database", "Updating database");
+            insertNewCategoryColumns(db, "countries");
+        }
     }
 
     /**
