@@ -180,6 +180,24 @@
                 android:fontFamily="sans-serif-light"
                 />
 
+            <CheckBox
+                android:id="@+id/fragment_one_player_login_category_movies"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Movies"
+                android:fontFamily="sans-serif-light"
+                />
+
+            <CheckBox
+                android:id="@+id/fragment_one_player_login_category_literature"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Literature"
+                android:fontFamily="sans-serif-light"
+                />
+
         </LinearLayout>
 
 

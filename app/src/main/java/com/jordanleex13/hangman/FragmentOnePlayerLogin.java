@@ -46,7 +46,7 @@ public class FragmentOnePlayerLogin extends Fragment implements View.OnClickList
 
     // UI elements
     private Spinner mUsernameSpinner;
-    private CheckBox animals, science, sports, people, landmarks, pokemon, countries;
+    private CheckBox animals, science, sports, people, landmarks, pokemon, countries, movies, literature;
     private RadioGroup cpuDifficulty;
     private RadioButton selectedCpuDifficulty;      // set to medium by default
     private TextView mTVNumOfTries;
@@ -91,7 +91,6 @@ public class FragmentOnePlayerLogin extends Fragment implements View.OnClickList
         View v = inflater.inflate(R.layout.fragment_one_player_login, container, false);
 
         cpuDifficulty = (RadioGroup) v.findViewById(R.id.fragment_one_player_login_cpu_difficulty);
-        startButton = (Button) v.findViewById(R.id.fragment_one_player_login_button_start);
 
         mUsernameSpinner = (Spinner) v.findViewById(R.id.fragment_one_player_login_spinner_username);
         // create and link the adapter to the spinner object
@@ -106,6 +105,8 @@ public class FragmentOnePlayerLogin extends Fragment implements View.OnClickList
         landmarks = (CheckBox) v.findViewById(R.id.fragment_one_player_login_category_landmarks);
         pokemon = (CheckBox) v.findViewById(R.id.fragment_one_player_login_category_pokemon);
         countries = (CheckBox) v.findViewById(R.id.fragment_one_player_login_category_countries);
+        movies = (CheckBox) v.findViewById(R.id.fragment_one_player_login_category_movies);
+        literature = (CheckBox) v.findViewById(R.id.fragment_one_player_login_category_literature);
 
         // Set listeners
         animals.setOnCheckedChangeListener(this);
@@ -115,6 +116,8 @@ public class FragmentOnePlayerLogin extends Fragment implements View.OnClickList
         landmarks.setOnCheckedChangeListener(this);
         pokemon.setOnCheckedChangeListener(this);
         countries.setOnCheckedChangeListener(this);
+        movies.setOnCheckedChangeListener(this);
+        literature.setOnCheckedChangeListener(this);
 
         mTVNumOfTries = (TextView) v.findViewById(R.id.fragment_one_player_login_num_of_tries);
 
@@ -123,6 +126,7 @@ public class FragmentOnePlayerLogin extends Fragment implements View.OnClickList
         mSeekBar.setMax(7);
         mSeekBar.setProgress(7);
 
+        startButton = (Button) v.findViewById(R.id.fragment_one_player_login_button_start);
         startButton.setOnClickListener(this);
 
         return v;
@@ -150,6 +154,8 @@ public class FragmentOnePlayerLogin extends Fragment implements View.OnClickList
         checkedHashMap.put("landmarks", landmarks.isChecked());
         checkedHashMap.put("pokemon", pokemon.isChecked());
         checkedHashMap.put("countries", countries.isChecked());
+        checkedHashMap.put("movies", movies.isChecked());
+        checkedHashMap.put("literature", literature.isChecked());
 
     }
 

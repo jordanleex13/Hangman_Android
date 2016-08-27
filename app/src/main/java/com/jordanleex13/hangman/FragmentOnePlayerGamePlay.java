@@ -269,6 +269,12 @@ public class FragmentOnePlayerGamePlay extends Fragment implements View.OnClickL
             if (currentChar >= 'A' && currentChar <= 'Z') {
                 underscore.setText(UNDERSCORE);
 
+            } else if (mCharArray[j] == '_') {
+                Log.e(TAG, "_");
+                underscore.setText(SPACE);
+                ++numOfNonLetters;
+                whichLayoutToPick = 1;
+
             } else if (mCharArray[j] == ' ') {
                 Log.e(TAG, "SPACE");
                 underscore.setText(SPACE);
@@ -429,7 +435,7 @@ public class FragmentOnePlayerGamePlay extends Fragment implements View.OnClickL
                         returnToPrevious();
                     }
                 })
-                .setNegativeButton("Search " + mWord, new DialogInterface.OnClickListener() {
+                .setNegativeButton("Search", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Uri uri = Uri.parse("http://www.google.com/#q="+ mWord);

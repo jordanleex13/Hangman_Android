@@ -10,7 +10,7 @@ import android.util.Log;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "Hangman";
-    public static final int DATABASE_VERSION = 2;
+    public static final int DATABASE_VERSION = 3;
 
 
     public DatabaseHelper(Context context) {
@@ -45,6 +45,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + "pokemonLosses INTEGER NOT NULL, "
                 + "countriesWins INTEGER NOT NULL, "
                 + "countriesLosses INTEGER NOT NULL, "
+                + "moviesWins INTEGER NOT NULL, "
+                + "moviesLosses INTEGER NOT NULL, "
+                + "literatureWins INTEGER NOT NULL, "
+                + "literatureLosses INTEGER NOT NULL, "
                 + "FOREIGN KEY(userId) REFERENCES users(_id)"
                 + ");");
 
@@ -52,9 +56,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        if (oldVersion == 1 && newVersion == 2) {
-            Log.e("database", "Updating database");
-            insertNewCategoryColumns(db, "countries");
+        Log.e("database", "Updating database");
+        if (oldVersion == 1) {
+            if (newVersion == 2) {
+                insertNewCategoryColumns(db, "countries");
+            } else if (newVersion == 3) {
+                insertNewCategoryColumns(db, "countries");
+                insertNewCategoryColumns(db, "movies");
+                insertNewCategoryColumns(db, "literature");
+            }
+        } else if (oldVersion == 2) {
+            if (newVersion == 3) {
+                insertNewCategoryColumns(db, "movies");
+                insertNewCategoryColumns(db, "literature");
+            }
         }
     }
 

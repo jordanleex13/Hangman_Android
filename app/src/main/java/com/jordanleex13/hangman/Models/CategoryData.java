@@ -12,9 +12,11 @@ public class CategoryData {
     public static final String LANDMARKS = "landmarks";
     public static final String POKEMON = "pokemon";
     public static final String COUNTRIES = "countries";
+    public static final String MOVIES = "movies";
+    public static final String LITERATURE = "literature";
 
-    public static final String[] CATEGORY_LIST = {ANIMALS, SCIENCE, SPORTS, PEOPLE, LANDMARKS, POKEMON, COUNTRIES};
-    public static final int NUM_OF_CATEGORIES = 7;
+    public static final String[] CATEGORY_LIST = {ANIMALS, SCIENCE, SPORTS, PEOPLE, LANDMARKS, POKEMON, COUNTRIES, MOVIES, LITERATURE};
+    public static final int NUM_OF_CATEGORIES = 9;
 
     private String mCategory;
     private int mWins;
