@@ -18,7 +18,9 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.SeekBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jordanleex13.hangman.Helpers.DatabaseHelper;
@@ -37,7 +39,8 @@ import java.util.Random;
  * Fragment login where a user, difficulty, and a category(s) are selected.
  */
 public class FragmentOnePlayerLogin extends Fragment implements View.OnClickListener,
-        CompoundButton.OnCheckedChangeListener, FragmentUserCreation.OnUserCreatedListener {
+        CompoundButton.OnCheckedChangeListener, FragmentUserCreation.OnUserCreatedListener,
+        SeekBar.OnSeekBarChangeListener {
 
     public static final String TAG = FragmentOnePlayerLogin.class.getSimpleName();
 
@@ -46,6 +49,8 @@ public class FragmentOnePlayerLogin extends Fragment implements View.OnClickList
     private CheckBox animals, science, sports, people, landmarks, pokemon, countries;
     private RadioGroup cpuDifficulty;
     private RadioButton selectedCpuDifficulty;      // set to medium by default
+    private TextView mTVNumOfTries;
+    private SeekBar mSeekBar;
     private Button startButton;
     private Toast mToast;
 
@@ -58,6 +63,7 @@ public class FragmentOnePlayerLogin extends Fragment implements View.OnClickList
     private String selectedCategory;
     private String selectedDifficulty;
     private String mCurrName;
+    private int numOfTries = 8;
 
     public static FragmentOnePlayerLogin newInstance() {
         return new FragmentOnePlayerLogin();
@@ -109,6 +115,13 @@ public class FragmentOnePlayerLogin extends Fragment implements View.OnClickList
         landmarks.setOnCheckedChangeListener(this);
         pokemon.setOnCheckedChangeListener(this);
         countries.setOnCheckedChangeListener(this);
+
+        mTVNumOfTries = (TextView) v.findViewById(R.id.fragment_one_player_login_num_of_tries);
+
+        mSeekBar = (SeekBar) v.findViewById(R.id.fragment_one_player_login_seekbar);
+        mSeekBar.setOnSeekBarChangeListener(this);
+        mSeekBar.setMax(7);
+        mSeekBar.setProgress(7);
 
         startButton.setOnClickListener(this);
 
@@ -202,7 +215,7 @@ public class FragmentOnePlayerLogin extends Fragment implements View.OnClickList
 
                     Assert.assertTrue(selectedCategory != null && selectedDifficulty != null && mUserId != 0);
 
-                    Fragment newFragment = FragmentOnePlayerGamePlay.newInstance(selectedCategory, selectedDifficulty, mUserId);
+                    Fragment newFragment = FragmentOnePlayerGamePlay.newInstance(selectedCategory, selectedDifficulty, mUserId, numOfTries);
                     FragmentHelper.swapFragments(getActivity().getSupportFragmentManager(),
                             R.id.activity_one_player_container, newFragment,
                             false, true, TAG, FragmentOnePlayerGamePlay.TAG);
@@ -394,5 +407,24 @@ public class FragmentOnePlayerLogin extends Fragment implements View.OnClickList
     @Override
     public void newUserCreated() {
         updateSpinner(true);
+    }
+
+
+
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+        // min progress is 0, max is 7 therefore corresponds to 1-8 tries
+        numOfTries = progress + 1;
+        mTVNumOfTries.setText("Number of tries: " + numOfTries);
+    }
+
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+        Log.e(TAG, "Value: " + seekBar.getProgress());
     }
 }

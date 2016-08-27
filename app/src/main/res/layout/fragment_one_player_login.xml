@@ -186,6 +186,25 @@
 
     </LinearLayout>
 
+
+    <TextView
+        android:id="@+id/fragment_one_player_login_num_of_tries"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@+id/fragment_one_player_login_seekbar"
+        android:textSize="@dimen/small_text"
+        android:fontFamily="sans-serif-light"/>
+
+    <SeekBar
+        android:id="@+id/fragment_one_player_login_seekbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/fragment_one_player_login_button_start"
+        android:layout_margin="@dimen/small_margin"
+        android:layout_marginBottom="@dimen/large_margin"/>
+
+
     <Button
         android:id="@+id/fragment_one_player_login_button_start"
         android:layout_width="match_parent"

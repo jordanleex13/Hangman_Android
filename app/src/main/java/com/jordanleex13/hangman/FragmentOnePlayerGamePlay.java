@@ -30,6 +30,7 @@ import com.jordanleex13.hangman.Threads.RunnableSaveData;
 import junit.framework.Assert;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -53,6 +54,9 @@ public class FragmentOnePlayerGamePlay extends Fragment implements View.OnClickL
     private String mCategory;
     private String mDifficulty;
     private int mUserId;
+    private int mNumOfTries;
+
+    private HashMap<Integer, Integer> mStageHashmap;
 
     // Word variables
     private String mWord;       // Taken straight from text file as is
@@ -68,12 +72,13 @@ public class FragmentOnePlayerGamePlay extends Fragment implements View.OnClickL
     private final String SPACE = " ";
 
 
-    public static FragmentOnePlayerGamePlay newInstance(String category, String difficulty, int id) {
+    public static FragmentOnePlayerGamePlay newInstance(String category, String difficulty, int id, int numOfTries) {
         FragmentOnePlayerGamePlay fragment = new FragmentOnePlayerGamePlay();
         Bundle args = new Bundle();
         args.putString("category", category);
         args.putString("difficulty", difficulty);
         args.putInt("userId", id);
+        args.putInt("numOfTries", numOfTries);
         fragment.setArguments(args);
         return fragment;
     }
@@ -82,15 +87,18 @@ public class FragmentOnePlayerGamePlay extends Fragment implements View.OnClickL
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mCategory = getArguments().getString("category");
-        mDifficulty = getArguments().getString("difficulty");
-        mUserId = getArguments().getInt("userId");
+        Bundle b = getArguments();
+        mCategory = b.getString("category");
+        mDifficulty = b.getString("difficulty");
+        mUserId = b.getInt("userId");
+        mNumOfTries = b.getInt("numOfTries");
 
         Log.d(TAG, "Text file : " + mCategory + "_" + mDifficulty);
 
         //FYI both arguments are lower case
         setUpWord();
 
+        setUpHashMap();
     }
 
     @Override
@@ -101,7 +109,7 @@ public class FragmentOnePlayerGamePlay extends Fragment implements View.OnClickL
 
         // Set initial image
         mHangman = (ImageView) v.findViewById(R.id.fragment_one_player_game_play_hangman_image);
-        setUpHangmanBitmap();
+        setUpHangmanBitmap("0");
 
         mLinearRow1 = (LinearLayout) v.findViewById(R.id.fragment_one_player_game_play_linear_layout);
         mLinearRow2 = (LinearLayout) v.findViewById(R.id.fragment_one_player_game_play_linear_layout_2);
@@ -172,6 +180,69 @@ public class FragmentOnePlayerGamePlay extends Fragment implements View.OnClickL
 
 
     /**
+     * Method to set up at hashmap which dictates which drawable will be shown
+     */
+    private void setUpHashMap() {
+        mStageHashmap = new HashMap<>();
+        switch (mNumOfTries) {
+            case 1:
+                mStageHashmap.put(mNumOfTries, 8);
+                break;
+            case 2:
+                mStageHashmap.put(mNumOfTries, 8);
+                mStageHashmap.put(mNumOfTries-1, 4);
+                break;
+            case 3:
+                mStageHashmap.put(mNumOfTries, 8);
+                mStageHashmap.put(mNumOfTries-1, 6);
+                mStageHashmap.put(mNumOfTries-2, 3);
+                break;
+            case 4:
+                mStageHashmap.put(mNumOfTries, 8);
+                mStageHashmap.put(mNumOfTries-1, 6);
+                mStageHashmap.put(mNumOfTries-2, 4);
+                mStageHashmap.put(mNumOfTries-3, 2);
+                break;
+            case 5:
+                mStageHashmap.put(mNumOfTries, 8);
+                mStageHashmap.put(mNumOfTries-1, 7);
+                mStageHashmap.put(mNumOfTries-2, 6);
+                mStageHashmap.put(mNumOfTries-3, 4);
+                mStageHashmap.put(mNumOfTries-4, 2);
+                break;
+            case 6:
+                mStageHashmap.put(mNumOfTries, 8);
+                mStageHashmap.put(mNumOfTries-1, 7);
+                mStageHashmap.put(mNumOfTries-2, 6);
+                mStageHashmap.put(mNumOfTries-3, 4);
+                mStageHashmap.put(mNumOfTries-4, 2);
+                mStageHashmap.put(mNumOfTries-5, 1);
+                break;
+            case 7:
+                mStageHashmap.put(mNumOfTries, 8);
+                mStageHashmap.put(mNumOfTries-1, 7);
+                mStageHashmap.put(mNumOfTries-2, 6);
+                mStageHashmap.put(mNumOfTries-3, 4);
+                mStageHashmap.put(mNumOfTries-4, 3);
+                mStageHashmap.put(mNumOfTries-5, 2);
+                mStageHashmap.put(mNumOfTries-6, 1);
+                break;
+            default: // 8 tries
+                mStageHashmap.put(mNumOfTries, 8);
+                mStageHashmap.put(mNumOfTries-1, 7);
+                mStageHashmap.put(mNumOfTries-2, 6);
+                mStageHashmap.put(mNumOfTries-3, 5);
+                mStageHashmap.put(mNumOfTries-4, 4);
+                mStageHashmap.put(mNumOfTries-5, 3);
+                mStageHashmap.put(mNumOfTries-6, 2);
+                mStageHashmap.put(mNumOfTries-7, 1);
+                break;
+
+        }
+    }
+
+
+    /**
      * Method to dynamically set up the word UI
      */
     private void setUpWordUI() {
@@ -226,14 +297,14 @@ public class FragmentOnePlayerGamePlay extends Fragment implements View.OnClickL
      * Method to set up correct drawable, whether from the bitmap cache or just from the drawable folder
      * Drawable number corresponds with the numOfWrongGuesses
      */
-    private void setUpHangmanBitmap() {
+    private void setUpHangmanBitmap(String stageNum) {
 
-        Bitmap bm = BitmapHelper.getBitmapFromMemCache(String.valueOf(numOfWrongGuesses));
+        Bitmap bm = BitmapHelper.getBitmapFromMemCache(stageNum);
         if (bm != null) {
             mHangman.setImageBitmap(bm);
         } else {
             Log.e(TAG, "Error loading image from cache. Setting default drawable");
-            int resId = FileHelper.getStringIdentifier(getActivity(), "stage" + numOfWrongGuesses, "drawable");
+            int resId = FileHelper.getStringIdentifier(getActivity(), "stage" + stageNum, "drawable");
             mHangman.setImageResource(resId);
         }
     }
@@ -307,17 +378,17 @@ public class FragmentOnePlayerGamePlay extends Fragment implements View.OnClickL
             view.setTextColor(getResources().getColor(R.color.red));
 
 
-            if (numOfWrongGuesses > 8) {
+            if (numOfWrongGuesses > mStageHashmap.get(numOfWrongGuesses)) {
                 Log.e(TAG, "ERROR. Should have exited already");
             } else {
 
-                if (numOfWrongGuesses == 8) {
+                if (numOfWrongGuesses == mNumOfTries) {
                     fillInRestOfLetters();
                     saveResults(false);
                     showAlertDialog("CPU Wins!");
                 }
 
-                setUpHangmanBitmap();
+                setUpHangmanBitmap(String.valueOf(mStageHashmap.get(numOfWrongGuesses)));
             }
         }
 
